@@ -8,16 +8,28 @@ about:
 
 This comes from the file `about.qmd`.
 
-This is a website for the final project for MA[46]15 Data Science with R by Team TEAMNAME.
+
+Project Github:
+https://github.com/sussmanbu/ma4615-sp25-final-project-team-10
+
+
+This is a website for the final project for MA[46]15 Data Science with R by Team Mango.
 The members of this team are below.
 
-## Jiaming Hu
+## Zuizz Saeed (https://github.com/zuizzms)
 
-Jiaming is a Ph.D. student in Stats and is the Teaching Fellow for the course.
+Zuizz is a Computer Science student at Boston University and is graduating in May 2025.
 
-## Dan Sussman
+## Jessica Park (https://github.com/jessp24)
 
-Dan is a professor in the Math/Stat department and is the instructor for the course. [Github](https://github.com/dpmcsuss)
+Jessica is a Data Science student at Boston University and is graduating in May 2026.
+
+## Mohan Wang (https://github.com/MohanW792)
+
+Mohan is a Data Science student at Boston University and is graduating in May 2026.
+
+## Sitong Lu (https://github.com/Tammylu)
+Tammy is a Data Science student at Boston University and is graduating in May 2026.
 
 <!-- Please leave in the information below -->
 
