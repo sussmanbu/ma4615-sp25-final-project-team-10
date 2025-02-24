@@ -12,6 +12,7 @@ This comes from the file `about.qmd`.
 Project Github:
 https://github.com/sussmanbu/ma4615-sp25-final-project-team-10
 
+:)))
 
 This is a website for the final project for MA[46]15 Data Science with R by Team Mango.
 The members of this team are below.
