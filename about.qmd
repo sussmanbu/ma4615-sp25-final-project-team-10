@@ -32,6 +32,10 @@ Mohan is a Data Science student at Boston University and is graduating in May 20
 ## Sitong Lu (https://github.com/Tammylu)
 Tammy is a Data Science student at Boston University and is graduating in May 2026.
 
+## Radhika Jhunjhunwala (https://github.com/radhika211103)
+ 
+Radhika is a Mathematical Economics student at Boston University and is graduating in May 2026.
+
 <!-- Please leave in the information below -->
 
 ### About this Template.
