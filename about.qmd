@@ -27,7 +27,7 @@ Jessica is a Data Science student at Boston University and is graduating in May 
 
 ## Mohan Wang (https://github.com/MohanW792)
 
-Mohan is a Data Science student at Boston University and is graduating in May 2026.
+Mohan is a Data Science student at Boston University and is graduating in May 2025
 
 ## Sitong Lu (https://github.com/Tammylu)
 Tammy is a Data Science student at Boston University and is graduating in May 2026.
