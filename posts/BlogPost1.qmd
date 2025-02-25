@@ -1,0 +1,16 @@
+---
+title: "BlogPost1"
+format: html
+---
+
+Data Set 1: National Registry of Exonerations (https://www.law.umich.edu/special/exoneration/Pages/detaillist.aspx)
+
+One data set we are considering for our project on racial disparities is the National Registry of Exonerations (NRE). This data set (3659 rows, 22 columns) tracks cases of wrongful convictions in the United States and provides detailed information about exonerees, including their race, age, crime type, conviction and exoneration dates, and factors that contributed to their wrongful conviction. The registry, maintained through a collaborative effort involving law schools, innocence organizations, and legal researchers, is designed to shed light on patterns of wrongful convictions and the systemic issues within the justice system. With over 3,000 recorded cases, this data set offers a valuable opportunity to explore how different factors—such as mistaken witness identification, false confessions, or official misconduct—affect exonerees from various racial backgrounds.
+
+By analyzing this data, we hope to examine whether racial disparities exist in wrongful convictions and, if so, how they manifest. For instance, do Black exonerees experience official misconduct at a higher rate than white exonerees? Are certain crime types—such as drug offenses or homicides—more likely to lead to wrongful convictions for particular racial groups? Do certain factors—such as official misconduct, inaccurate forensic evidence, or eyewitness misidentification—disproportionately affect exonerees of particular racial groups? Additionally, we want to explore whether exonerees from different racial backgrounds serve significantly different amounts of time before being exonerated. From a practical standpoint, the data comes in a relatively well-structured spreadsheet format (although it is sometimes updated with new cases and additional fields). Loading it into a data analysis environment should be fairly straightforward. However, because this registry is compiled from many sources (court documents, news reports, legal filings, etc.), some challenges with missing or inconsistent data can arise. Despite these limitations, we believe this data set provides a powerful lens through which we can better understand inequities in the criminal justice system and contribute to discussions on how to address them.
+
+Data Set 2:
+
+Data Set 3:
+
+
