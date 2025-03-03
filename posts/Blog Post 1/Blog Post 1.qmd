@@ -1,5 +1,9 @@
 ---
 title: "Blog Post 1"
+description:  |
+  Our first blog post containing 3 proposed data sets.
+author: "Team 10 (Mango)"
+date: "2025-03-03"
 format: html
 ---
 
