@@ -7,6 +7,11 @@ date: "2025-03-17"
 format: html
 ---
 
-TEXT HERE
+Data background
 
+The data comes from the National Registry of Exonerations website, which is a collaborative project led by the Newkirk Center for Science & Society. The data is collected by researchers at the University of California Irvine, the University Michigan Law School, and the Michigan State University College of Law from court documents, news reports, and advocacy organizations, and other public sources to track whether a person's conviction is overturned. This dataset is the original source as far as exoneration data goes.
+
+There's no issue with how the data was collected. The sample population is the group of people who have been officially exonerated, but it's not a record of all wrongful convictions, just specifically cases in which someone was able to obtain an exoneration. Because the dataset only includes cases that achieved an exoneration, there's probability that a lot of wrongful convictions never come to attention. Also, because of the publicly available information, some cases may have limited documentation, especially some older ones with fewer resources and publicity.
+
+This data is used to research and analyze the causes and impacts of wrongful convictions, and its findings reflect systemic issues within the criminal justice system. Additionally, it provides a reference for policy-making to help prevent and reduce wrongful convictions while offering support for governance.Some other studies have also utilized the same data. For example, the American Statistical Association (ASA)’s Law and Justice Statistics Section has analyzed the frequency and distribution of wrongful convictions. The research article "Just Data: Advancing the Innocence Movement" also discusses the practical applications of NRE data in real life.The data provided by NRE has been used for policy decisions and has played a significant role in the development of criminal justice policies. Based on NRE data, researchers and policymakers have raised several important questions, such as: How does racial bias influence wrongful convictions? What reforms should be implemented to reduce such injustices? What are the common factors leading to wrongful convictions? The NRE data provides direction for improving the judicial system and helps prevent future miscarriages of justice.
 
