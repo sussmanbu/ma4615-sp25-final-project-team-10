@@ -1,0 +1,12 @@
+---
+title: "Blog Post 2"
+description:  |
+  Our second blog post containing our progress so far.
+author: "Team 10 (Mango)"
+date: "2025-03-17"
+format: html
+---
+
+TEXT HERE
+
+
