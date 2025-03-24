@@ -6,4 +6,90 @@ author: "Team 10 (Mango)"
 date: "2025-03-24"
 format: html
 ---
-ADD TEXT HERE
+
+Our dataset is less than 50MB, so we are not putting it in an ignore folder. We are using the entire dataset here (not a subset). We already have created an exoneration_data_clean.rds file that we created last week (generated from our scripts/clean_data.R). The original csv file, titled dataset/publicspreadsheet.csv, is also located in our dataset folder. We would like to note that many columns representing case-related tags contain N/A values (essentially NA is an indicator that this tag is not applied to the case/row):
+“DNA: Post-conviction DNA testing was conducted and contributed to the exoneration.”
+“MWID: Mistaken Witness Identification”
+“FC: False Confession”
+“P/FA: Perjury or False Accusation”
+“OM: Official Misconduct”
+“ILD: Inadequate Legal Defense”
+
+
+## Exploratory Data Analysis of Exoneration Data
+
+As part of our data cleaning process, we explored our cleaned dataset to identify unusual values, check for imbalances, and uncover key relationships. Below are some plots and tables that helped us better understand the structure and patterns within the data.
+
+Load the cleaned dataset:
+```{r q0}
+library(tidyverse)
+library(here)
+
+# Load the cleaned exoneration dataset
+exoneration_data <- read_rds(here::here("dataset", "exoneration_data_clean.rds"))
+```
+
+1. Most common crimes in the dataset
+```{r q1}
+library(tidyverse)
+library(here)
+
+# Load the cleaned exoneration dataset
+exoneration_data <- read_rds(here::here("dataset", "exoneration_data_clean.rds"))
+
+exoneration_data %>%
+  count(Worst_Crime_Display, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Worst_Crime_Display, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Most Common Crimes Among Exonerees",
+       x = "Crime",
+       y = "Count")
+```
+
+2. Exonerees by Race and Sex
+```{r q2}
+exoneration_data %>%
+  count(Race, Sex) %>%
+  ggplot(aes(x = Race, y = n, fill = Sex)) +
+  geom_col(position = "dodge") +
+  labs(title = "Exonerees by Race and Sex",
+       x = "Race",
+       y = "Number of Exonerees")
+
+```
+
+3. Distribution of Age at Time of Conviction
+```{r q3}
+ggplot(exoneration_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
+  labs(title = "Distribution of Exonerees' Ages at Conviction",
+       x = "Age",
+       y = "Count") +
+  theme_minimal()
+
+```
+
+4. Trends in Exoneration Over Time
+```{r q4}
+exoneration_data %>%
+  count(Exonerated) %>%
+  ggplot(aes(x = Exonerated, y = n)) +
+  geom_line(group = 1, color = "darkgreen") +
+  geom_point() +
+  labs(title = "Number of Exonerations Over Time",
+       x = "Year of Exoneration",
+       y = "Count")
+
+```
+
+5. Table: DNA Evidence by Race
+```{r q5}
+exoneration_data %>%
+  filter(!is.na(DNA)) %>%
+  count(Race, DNA) %>%
+  pivot_wider(names_from = DNA, values_from = n, values_fill = 0)
+
+
+```
