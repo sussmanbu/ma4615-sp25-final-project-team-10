@@ -1,0 +1,44 @@
+---
+title: "Blog Post 4"
+description:  |
+author: "Team 10 (Mango)"
+date: "2025-03-31"
+format: html
+---
+
+Potential Response Variables:
+Convicted / Exonerated – binary response (Yes/No)
+Posting Date / Date of Crime Year – can be used to compute "time to exoneration" or analyze trends over time
+Worst Crime Display – could be used as a categorical response for classification
+F/MFE (Female/Male False Evidence) – whether false evidence was involved (binary response)
+
+Potential Predictor Variables:
+Age
+Race
+Sex
+State / County
+Type of Crime (Worst Crime Display)
+Date of Crime Year
+DNA / MWID / OM Tags
+
+Possible Transformations:
+Binarize tags: turn tags like P/FA, DNA, MWID, etc. into separate binary columns (0 or 1)
+Compute sentence length: transform sentence text ("10 years", "Life without parole", etc.) into numeric values (e.g., Life = 99, or just flag it separately)
+Date differences: derive "time between conviction and posting", or "time to exoneration"
+Group ages: create age groups (under 18, 18–25, 26–35, etc.)
+Simplify crimes: group crimes into broader categories (e.g., violent vs. non-violent)
+
+Modeling Options:
+1. Logistic Regression (binary outcomes)
+Predicting whether someone is exonerated (Yes/No)
+Predicting presence of DNA evidence or false evidence
+Predicting whether someone receives life sentence
+
+2. Linear Regression (continuous outcomes)
+Predicting sentence length (in years)
+
+
+
+
+
+
