@@ -1,6 +1,7 @@
 ---
 title: "Blog Post 4"
 description:  |
+  Our fourth blog post containing a more in depth analysis of the exoneration data set.
 author: "Team 10 (Mango)"
 date: "2025-03-31"
 format: html
@@ -19,6 +20,10 @@ We created a new binary column, False_Evidence, defined as cases with any of the
 Using this, we calculated the proportion of exonerees within each racial group whose cases involved false evidence.
 
 ```{r}
+library(dplyr)
+library(ggplot2)
+# Load the cleaned exoneration dataset
+exoneration_data <- readRDS(here::here("dataset", "exoneration_data_clean.rds"))
 # Create False_Evidence column
 exoneration_data <- exoneration_data %>%
   mutate(False_Evidence = if_else(!is.na(`OM`) | !is.na(`P/FA`) | !is.na(`FC`), 1, 0))
