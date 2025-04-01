@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Team 10 (Mango)">
+<meta name="dcterms.date" content="2025-03-31">
+<meta name="description" content="Our fourth blog post containing a more in depth analysis of the exoneration data set.">
+
+<title>Blog Post 4 – MA [46]15 Final Project Team Mango</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">MA [46]15 Final Project Team Mango</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../big_picture.html"> 
+<span class="menu-text">Big Picture</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../analysis.html"> 
+<span class="menu-text">Analysis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Blog Post 4</h1>
+                  <div>
+        <div class="description">
+          <p>Our fourth blog post containing a more in depth analysis of the exoneration data set.</p>
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Team 10 (Mango) </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 31, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>In our previous blog posts, we established foundational insights from the National Registry of Exonerations dataset. We uncovered broad trends—for example, that Black exonerees are overrepresented, homicide dominates the dataset, and that DNA evidence and false confessions appear disproportionately in specific crimes.This week, we began moving from exploratory analysis to explanatory analysis. Rather than simply observing that disparities exist, we aimed to dig deeper: · What factors predict whether false evidence is involved in a case? · Do these factors vary by race or crime type? · Can we start to model these outcomes with statistical tools?</p>
+<p>We focused this week’s exploratory analysis on the role of false evidence (including official misconduct, perjury/false accusation, and false confession). We wanted to understand how often this occurs, and whether it disproportionately affects certain racial groups or certain crime types. We created a new binary column, False_Evidence, defined as cases with any of the following tags: · OM (Official Misconduct) · P/FA (Perjury or False Accusation) · FC (False Confession) Using this, we calculated the proportion of exonerees within each racial group whose cases involved false evidence.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the cleaned exoneration dataset</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"dataset"</span>, <span class="st">"exoneration_data_clean.rds"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create False_Evidence column</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="ot">&lt;-</span> exoneration_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">False_Evidence =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">OM</span><span class="st">`</span>) <span class="sc">|</span> <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">P/FA</span><span class="st">`</span>) <span class="sc">|</span> <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">FC</span><span class="st">`</span>), <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot: False Evidence by Race</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Race) <span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">FE_rate =</span> <span class="fu">mean</span>(False_Evidence, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Race, FE_rate), <span class="at">y =</span> FE_rate)) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"darkgreen"</span>) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proportion of False Evidence Cases by Race"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Race"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="BlogPost4_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 1 Insight: False Evidence Disparities by Race This chart shows the proportion of exonerees in each racial group whose cases involved false evidence—defined as the presence of official misconduct (OM), false confessions (FC), or perjury/false accusation (P/FA). · The highest proportion is found in the “Don’t Know” group, likely due to data entry uncertainty or legacy cases with incomplete documentation. · Among named racial groups, Black, Hispanic, and White exonerees all show relatively high proportions of false evidence cases—over 65% in each group. · Black exonerees have the highest known rate of false evidence involvement, slightly above Hispanic and White counterparts. This finding supports the hypothesis that racial disparities exist not only in wrongful convictions themselves but also in the mechanisms that cause them. · Asian, Native American, and “Other” groups show lower proportions, though these groups have smaller sample sizes, which may contribute to more variation or underreporting. Overall, this plot reinforces the importance of examining race as a structural factor influencing how and why wrongful convictions occur.</p>
+<p>We also explored whether DNA evidence is more common in some types of crimes than others.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot: DNA Evidence by Worst Crime Type</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DNA_binary =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(DNA), <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Worst_Crime_Display) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Count =</span> <span class="fu">n</span>(),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">DNA_Rate =</span> <span class="fu">mean</span>(DNA_binary, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Count)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">12</span>, Count) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Worst_Crime_Display, DNA_Rate), <span class="at">y =</span> DNA_Rate)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"DNA Evidence Rate by Crime Type"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Crime Type"</span>, <span class="at">y =</span> <span class="st">"Proportion with DNA Evidence"</span>) <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="BlogPost4_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 2 Insight: DNA Evidence Varies Strongly by Crime Type</p>
+<p>This plot illustrates how the use of DNA evidence in exoneration cases differs significantly across crime types. · Sexual assault cases overwhelmingly stand out, with over 65% of cases involving DNA evidence. This is likely due to the nature of such crimes, where biological evidence plays a central role in both prosecution and exoneration. · Murder and manslaughter follow as the next highest categories, each with around 30–40% DNA involvement, reflecting their severity and the likelihood of forensic investigation. · Crimes such as fraud, drug possession, and weapon-related offenses show very low rates of DNA evidence, typically below 5%, indicating that wrongful convictions in these categories are more likely driven by non-forensic factors like false accusations, misidentification, or official misconduct. · There’s a clear distinction between violent crimes (with high DNA rates) and non-violent or administrative crimes (with low or no DNA involvement).</p>
+<p>These differences highlight the importance of contextualizing wrongful conviction mechanisms by crime type, and suggest that forensic evidence plays a far greater role in rectifying wrongful convictions for violent offenses.</p>
+<p>As we begin modeling, we outlined a list of potential response variables and predictors, along with possible transformations to improve interpretability and predictive power：</p>
+<p>Potential Response Variables: Convicted / Exonerated – binary response (Yes/No) Posting Date / Date of Crime Year – can be used to compute “time to exoneration” or analyze trends over time Worst Crime Display – could be used as a categorical response for classification F/MFE (Female/Male False Evidence) – whether false evidence was involved (binary response)</p>
+<p>Potential Predictor Variables: Age Race Sex State / County Type of Crime (Worst Crime Display) Date of Crime Year DNA / MWID / OM Tags</p>
+<p>Possible Transformations: Binarize tags: turn tags like P/FA, DNA, MWID, etc. into separate binary columns (0 or 1) Compute sentence length: transform sentence text (“10 years”, “Life without parole”, etc.) into numeric values (e.g., Life = 99, or just flag it separately) Date differences: derive “time between conviction and posting”, or “time to exoneration” Group ages: create age groups (under 18, 18–25, 26–35, etc.) Simplify crimes: group crimes into broader categories (e.g., violent vs.&nbsp;non-violent)</p>
+<p>Modeling Options: 1. Logistic Regression (binary outcomes) Predicting whether someone is exonerated (Yes/No) Predicting presence of DNA evidence or false evidence Predicting whether someone receives life sentence</p>
+<ol start="2" type="1">
+<li>Linear Regression (continuous outcomes) Predicting sentence length (in years)</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> exoneration_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">False_Evidence =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">OM</span><span class="st">`</span>) <span class="sc">|</span> <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">P/FA</span><span class="st">`</span>) <span class="sc">|</span> <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">FC</span><span class="st">`</span>), <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">DNA_binary =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(DNA), <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">MWID_binary =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(MWID), <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(False_Evidence), <span class="sc">!</span><span class="fu">is.na</span>(Race), <span class="sc">!</span><span class="fu">is.na</span>(Sex), <span class="sc">!</span><span class="fu">is.na</span>(Age), <span class="sc">!</span><span class="fu">is.na</span>(Worst_Crime_Display))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>logit_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(False_Evidence <span class="sc">~</span> Race <span class="sc">+</span> Sex <span class="sc">+</span> Age <span class="sc">+</span> Worst_Crime_Display <span class="sc">+</span> DNA_binary <span class="sc">+</span> MWID_binary,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> model_data, <span class="at">family =</span> binomial)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Output summary</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(logit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = False_Evidence ~ Race + Sex + Age + Worst_Crime_Display + 
+    DNA_binary + MWID_binary, family = binomial, data = model_data)
+
+Coefficients:
+                                                   Estimate Std. Error z value
+(Intercept)                                        16.02742  827.63812   0.019
+RaceBlack                                           1.03866    0.46944   2.213
+RaceDon't Know                                     16.96728  933.93609   0.018
+RaceHispanic                                        0.82617    0.48066   1.719
+RaceNative American                                 0.11322    0.65442   0.173
+RaceOther                                          -0.19038    0.71371  -0.267
+RaceWhite                                           0.47518    0.46977   1.012
+SexMale                                             0.73772    0.14830   4.975
+Age                                                -0.01152    0.00472  -2.440
+Worst_Crime_DisplayArson                          -16.36825  827.63808  -0.020
+Worst_Crime_DisplayAssault                        -14.98970  827.63801  -0.018
+Worst_Crime_DisplayAttempt, Nonviolent            -17.01855  827.63932  -0.021
+Worst_Crime_DisplayAttempt, Violent               -14.33418  827.63839  -0.017
+Worst_Crime_DisplayAttempted Murder               -15.19084  827.63801  -0.018
+Worst_Crime_DisplayBribery                        -17.02215  827.63835  -0.021
+Worst_Crime_DisplayBurglary/Unlawful Entry        -15.91454  827.63809  -0.019
+Worst_Crime_DisplayChild Abuse                    -16.54550  827.63813  -0.020
+Worst_Crime_DisplayChild Sex Abuse                -14.22965  827.63800  -0.017
+Worst_Crime_DisplayConspiracy                     -17.01638  827.63834  -0.021
+Worst_Crime_DisplayDependent Adult Abuse          -33.28804 2538.26702  -0.013
+Worst_Crime_DisplayDestruction of Property        -16.71760  827.63902  -0.020
+Worst_Crime_DisplayDrug Possession or Sale        -16.48286  827.63798  -0.020
+Worst_Crime_DisplayFailure to Pay Child Support   -33.54563 1864.89364  -0.018
+Worst_Crime_DisplayFiling a False Report            0.35118 2538.26702   0.000
+Worst_Crime_DisplayForgery                        -15.51443  827.63896  -0.019
+Worst_Crime_DisplayFraud                          -15.78224  827.63803  -0.019
+Worst_Crime_DisplayHarassment                       0.24061 2538.26707   0.000
+Worst_Crime_DisplayImmigration                     -0.54408 1456.59414   0.000
+Worst_Crime_DisplayKidnapping                     -15.69726  827.63811  -0.019
+Worst_Crime_DisplayManslaughter                   -15.78125  827.63802  -0.019
+Worst_Crime_DisplayMenacing                        -0.28608 1883.39475   0.000
+Worst_Crime_DisplayMilitary Justice Offense        -0.83457 2538.26702   0.000
+Worst_Crime_DisplayMurder                         -14.44534  827.63798  -0.017
+Worst_Crime_DisplayObstruction of Justice         -15.36944  827.63892  -0.019
+Worst_Crime_DisplayOfficial Misconduct            -15.46930  827.63880  -0.019
+Worst_Crime_DisplayOther                          -32.88000 2538.26707  -0.013
+Worst_Crime_DisplayOther Nonviolent Felony        -17.42766  827.63809  -0.021
+Worst_Crime_DisplayOther Nonviolent Misdemeanor   -16.10496  827.63825  -0.019
+Worst_Crime_DisplayOther Violent Felony           -15.81255  827.63815  -0.019
+Worst_Crime_DisplayOther Violent Misdemeanor      -15.56821  827.63871  -0.019
+Worst_Crime_DisplayPerjury                         -0.28690 1352.64415   0.000
+Worst_Crime_DisplayPossession of Stolen Property  -17.36897  827.63903  -0.021
+Worst_Crime_DisplayRobbery                        -15.54097  827.63800  -0.019
+Worst_Crime_DisplaySex Offender Registration      -33.53812  906.90208  -0.037
+Worst_Crime_DisplaySexual Assault                 -15.23539  827.63798  -0.018
+Worst_Crime_DisplaySolicitation                   -16.01731  827.63888  -0.019
+Worst_Crime_DisplayStalking                       -16.41285  827.63891  -0.020
+Worst_Crime_DisplaySupporting Terrorism             0.18933 1453.59670   0.000
+Worst_Crime_DisplayTax Evasion/Fraud              -14.84393  827.63869  -0.018
+Worst_Crime_DisplayTheft                          -16.57169  827.63809  -0.020
+Worst_Crime_DisplayThreats                        -17.13255  827.63834  -0.021
+Worst_Crime_DisplayTraffic Offense                -15.71428  827.63828  -0.019
+Worst_Crime_DisplayWeapon Possession or Sale      -16.15556  827.63802  -0.020
+DNA_binary                                         -0.45439    0.13454  -3.377
+MWID_binary                                        -1.71540    0.12540 -13.680
+                                                 Pr(&gt;|z|)    
+(Intercept)                                      0.984550    
+RaceBlack                                        0.026930 *  
+RaceDon't Know                                   0.985505    
+RaceHispanic                                     0.085647 .  
+RaceNative American                              0.862648    
+RaceOther                                        0.789666    
+RaceWhite                                        0.311769    
+SexMale                                          6.54e-07 ***
+Age                                              0.014679 *  
+Worst_Crime_DisplayArson                         0.984221    
+Worst_Crime_DisplayAssault                       0.985550    
+Worst_Crime_DisplayAttempt, Nonviolent           0.983594    
+Worst_Crime_DisplayAttempt, Violent              0.986182    
+Worst_Crime_DisplayAttempted Murder              0.985356    
+Worst_Crime_DisplayBribery                       0.983591    
+Worst_Crime_DisplayBurglary/Unlawful Entry       0.984659    
+Worst_Crime_DisplayChild Abuse                   0.984050    
+Worst_Crime_DisplayChild Sex Abuse               0.986283    
+Worst_Crime_DisplayConspiracy                    0.983597    
+Worst_Crime_DisplayDependent Adult Abuse         0.989536    
+Worst_Crime_DisplayDestruction of Property       0.983885    
+Worst_Crime_DisplayDrug Possession or Sale       0.984111    
+Worst_Crime_DisplayFailure to Pay Child Support  0.985648    
+Worst_Crime_DisplayFiling a False Report         0.999890    
+Worst_Crime_DisplayForgery                       0.985044    
+Worst_Crime_DisplayFraud                         0.984786    
+Worst_Crime_DisplayHarassment                    0.999924    
+Worst_Crime_DisplayImmigration                   0.999702    
+Worst_Crime_DisplayKidnapping                    0.984868    
+Worst_Crime_DisplayManslaughter                  0.984787    
+Worst_Crime_DisplayMenacing                      0.999879    
+Worst_Crime_DisplayMilitary Justice Offense      0.999738    
+Worst_Crime_DisplayMurder                        0.986075    
+Worst_Crime_DisplayObstruction of Justice        0.985184    
+Worst_Crime_DisplayOfficial Misconduct           0.985088    
+Worst_Crime_DisplayOther                         0.989665    
+Worst_Crime_DisplayOther Nonviolent Felony       0.983200    
+Worst_Crime_DisplayOther Nonviolent Misdemeanor  0.984475    
+Worst_Crime_DisplayOther Violent Felony          0.984757    
+Worst_Crime_DisplayOther Violent Misdemeanor     0.984992    
+Worst_Crime_DisplayPerjury                       0.999831    
+Worst_Crime_DisplayPossession of Stolen Property 0.983257    
+Worst_Crime_DisplayRobbery                       0.985019    
+Worst_Crime_DisplaySex Offender Registration     0.970500    
+Worst_Crime_DisplaySexual Assault                0.985313    
+Worst_Crime_DisplaySolicitation                  0.984559    
+Worst_Crime_DisplayStalking                      0.984178    
+Worst_Crime_DisplaySupporting Terrorism          0.999896    
+Worst_Crime_DisplayTax Evasion/Fraud             0.985690    
+Worst_Crime_DisplayTheft                         0.984025    
+Worst_Crime_DisplayThreats                       0.983485    
+Worst_Crime_DisplayTraffic Offense               0.984852    
+Worst_Crime_DisplayWeapon Possession or Sale     0.984426    
+DNA_binary                                       0.000731 ***
+MWID_binary                                       &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 4005.5  on 3630  degrees of freedom
+Residual deviance: 3271.1  on 3576  degrees of freedom
+AIC: 3381.1
+
+Number of Fisher Scoring iterations: 15</code></pre>
+</div>
+</div>
+<p>Key Findings:</p>
+<p>Race: Being Black was significantly associated with higher odds of false evidence involvement (p = 0.027), controlling for other variables. Hispanic exonerees also showed a marginally significant effect (p ≈ 0.086). Other racial groups did not differ significantly from the reference category (likely Asian or Native American, depending on how factors were encoded).</p>
+<p>Sex and Age: Male exonerees were significantly more likely to have false evidence involved in their case (p &lt; 0.001).Older age was associated with slightly lower odds of false evidence (p = 0.015), though the effect size is small.</p>
+<p>Crime Type: None of the crime types reached statistical significance. This may be due to multicollinearity or sparse data in many crime categories. Some estimates are unusually large or small with very high standard errors, suggesting overparameterization or poor category separation.</p>
+<p>DNA and MWID Evidence: Interestingly, the presence of DNA evidence was negatively associated with false evidence (estimate = -0.454, p = 0.0007). This could suggest that cases involving false evidence may lack concrete forensic support.Mistaken witness identification (MWID) had the strongest negative association with false evidence (estimate = -1.72, p &lt; 0.0001), which is intuitive—if a case hinges on mistaken ID, it may be less likely to also involve fabricated evidence.</p>
+<p>Model Fit: The residual deviance decreased from 4005.5 to 3271.1, indicating improved fit. AIC = 3381.1, which can be used for model comparison later.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma4615-sp25-final-project-team-10\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
