@@ -1,7 +1,7 @@
 ---
-title: "BlogPost5"
+title: "Blog Post 5"
 description:  |
-  Our fifth blog post containing a second dataset and the description of the combining dataset
+  Our fifth blog post containing details about our second dataset.
 author: "Team 10 (Mango)"
 date: "2025-04-07"
 format: html
