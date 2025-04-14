@@ -1,0 +1,56 @@
+---
+title: "BlogPost6"
+description:  |
+  Our sixth blog post containing the combination of two datasets
+author: "Team 10 (Mango)"
+date: "2025-04-14"
+format: html
+---
+```{r}
+library(dplyr)
+library(readr)
+
+chicago_crime_data <- read_csv("/Users/wmh/Desktop/MA415/Project Team 10/dataset-ignore/Crimes_-_2001_to_Present.csv")
+
+chicago_clean <- chicago_crime_data %>%
+  filter(Year >= 2001, !is.na(Year)) %>%
+  filter(`Primary Type` %in% c("HOMICIDE", "CRIM SEXUAL ASSAULT", "ROBBERY", "BURGLARY", "SEX OFFENSE")) %>%
+  group_by(Year, `Primary Type`) %>%
+  summarise(Crime_Count = n(), .groups = "drop")
+chicago_clean
+```
+Since the Chicago dataset is very huge, to prepare the Chicago crime dataset for comparison with the exoneration data, we first filtered the full dataset only include records from 2001 onward, aligning with the time span of our analysis. We further narrowed the dataset to focus on five major crime categories relevant to potential wrongful convictions: HOMICIDE, CRIM SEXUAL ASSAULT, ROBBERY, BURGLARY, and SEX OFFENSE. These categories were selected based on their severity and overlap with crimes most often associated with exonerations. After filtering, we grouped the data by year and crime type, and counted the number of reported incidents per group. This resulted in a clean, aggregated table of 120 rows (24 years × 5 crime types), which provides a structured yearly summary of serious criminal activity in Chicago. This cleaned data will enable meaningful comparison with the exoneration dataset by aligning both sources on a common yearly time frame and crime category structure.
+
+```{r}
+exoneration_data <- read_csv("/Users/wmh/Desktop/MA415/Project Team 10/dataset/publicspreadsheet.csv")
+exon_clean <- exoneration_data %>%
+  filter(County == "Cook", !is.na(Convicted)) %>%
+  filter(Convicted >= 2001)
+
+exon_yearly <- exon_clean %>%
+  group_by(Year = Convicted, `Worst Crime Display`) %>%
+  summarise(Exoneration_Count = n(), .groups = "drop")
+
+crime_mapping <- tibble(
+  `Worst Crime Display` = c("Murder", "Sexual Assault", "Robbery", "Theft", "Sex Offense"),
+  `Primary Type` = c("HOMICIDE", "CRIM SEXUAL ASSAULT", "ROBBERY", "BURGLARY", "SEX OFFENSE")
+)
+
+exon_mapped <- exon_yearly %>%
+  inner_join(crime_mapping, by = "Worst Crime Display")
+combined_panel <- chicago_clean %>%
+  inner_join(exon_mapped, by = c("Year", "Primary Type"))
+
+combined_panel
+```
+To prepare the exoneration dataset for comparison with Chicago crime data, we began by filtering the data to include only individuals convicted in Cook County from the year 2001 onward, aligning with the temporal scope of the crime dataset. We grouped the filtered data by conviction year and the variable Worst Crime Display, which indicates the most serious offense in each case, and calculated the number of exonerations per year for each crime type. To enable a valid comparison, we created a mapping table that aligns exoneration crime categories (e.g., "Murder", "Sexual Assault") with the Primary Type categories used in the Chicago crime dataset (e.g., "HOMICIDE", "CRIM SEXUAL ASSAULT"). After applying this mapping, we joined the exoneration summary with the cleaned and aggregated Chicago crime data using both year and crime type as keys. The resulting combined dataset allows for side-by-side comparisons of how many people were convicted of certain serious crimes each year and how many were later exonerated, enabling a structured analysis of trends and disparities in the justice system over time.
+
+
+- Whether spikes in reported crimes correlate with spikes in wrongful convictions a few years later.
+
+From the chart, there is no clear or consistent lagged correlation between spikes in crime reports and spikes in exonerations. For instance, HOMICIDE counts remain high and relatively stable across the early 2000s (e.g., 667 in 2001, 658 in 2002, 604 in 2003), while exoneration counts for those same conviction years fluctuate without a clear pattern (7 in 2001, 4 in 2002, 2 in 2003). Similarly, BURGLARY had high crime counts (25,623 in 2002), but very few corresponding exonerations (only 1). This suggests that while wrongful convictions are happening, they are not necessarily directly following spikes in reported crime at a systemic or predictable lag.
+
+
+- The types of crimes most commonly associated with exonerations in Cook County, and how those compare to the overall crime landscape in Chicago.
+
+The data shows that HOMICIDE (mapped to "Murder") is by far the most commonly associated crime with exonerations in Cook County. Nearly all years shown in the chart have homicide-related exonerations, with counts ranging from 2 to 7 per year. On the other hand, BURGLARY, while frequently reported (e.g., ~26,000 incidents per year), results in almost no exonerations. Similarly, ROBBERY and SEX OFFENSE categories have few to no exoneration entries despite high occurrence rates. This contrast suggests a disproportionate concentration of wrongful convictions in the most severe crimes, like homicides and sexual assaults. These are often cases with longer sentences and higher investigative scrutiny, where flawed evidence (e.g., eyewitness misidentification, coerced confessions, or prosecutorial misconduct) may have played a significant role and where advocacy efforts focus more intensively.
