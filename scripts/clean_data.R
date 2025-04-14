@@ -41,12 +41,53 @@ exoneration_data <- exoneration_data %>%
 write_rds(exoneration_data, file = here::here("dataset", "exoneration_data_clean.rds"))
 
 
+# DATASET #2
+library(tidyverse)
+library(here)
+
+# Efficiently read only necessary columns and filter early using read_csv and col_types
+crime_data_raw <- read_csv(
+  here::here("dataset-ignore", "Crimes_-_2001_to_Present.csv"),
+  col_types = cols_only(
+    ID = col_double(),
+    Date = col_character(),
+    Primary.Type = col_character(),
+    Description = col_character(),
+    Location.Description = col_character(),
+    Arrest = col_logical(),
+    Domestic = col_logical(),
+    Year = col_integer(),
+    Latitude = col_double(),
+    Longitude = col_double()
+  )
+)
+
+# Filter for crimes from 2010 and later
+crime_data_2010 <- crime_data_raw %>%
+  filter(Year >= 2010)
+
+# Save the filtered dataset as RDS for faster access later
+write_rds(crime_data_2010, file = here::here("dataset-ignore", "crime_data_2010.rds"))
 
 
 
 
+##############################
+# code to view the column headers of the original raw dataset
+library(readr)
+library(here)
 
+# Read just the first row to inspect column names
+crime_data_head <- read_csv(
+  here::here("dataset-ignore", "Crimes_-_2001_to_Present.csv"),
+  n_max = 1
+)
 
+# Print column names to console
+print(colnames(crime_data_head))
 
+# Optionally save this 1-row snapshot to a smaller CSV or RDS for reference
+write_csv(crime_data_head, here::here("dataset-ignore", "crime_data_head.csv"))
+write_rds(crime_data_head, here::here("dataset-ignore", "crime_data_head.rds"))
 
-
+################3
