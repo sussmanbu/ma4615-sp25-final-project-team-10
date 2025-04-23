@@ -1,0 +1,53 @@
+---
+title: "BlogPost7"
+description:  |
+  Our sixth blog post containing the combination of two datasets
+author: "Team 10 (Mango)"
+date: "2025-04-22"
+format: html
+---
+Designing Our Interactive Dashboard: Exploring Justice in Cook County
+
+As we approach the final stretch of our project, we’ve started planning the interactive dashboard that will serve as the centerpiece of our analysis. Our goal is to build an interface that brings together two rich datasets—exonerations across the U.S. and crimes committed in Chicago since 2001—to explore systemic patterns of justice and injustice in Cook County. This dashboard won’t just display statistics—it will give users the ability to interact with and investigate the data on their own terms.
+
+Core Vision and Features
+
+At the heart of our interactive will be the ability to see big picture trends—like how exonerations in Cook County have changed over time—and to zoom in on more granular comparisons, such as how often exonerations follow convictions for specific types of crimes. To achieve this, our dashboard will include:
+
+- A timeline view showing the number of exonerations and total crimes over time (e.g., by year or month), allowing users to explore trends and compare timelines side by side.
+
+- Filter options to narrow the dataset by crime type (e.g., homicide, drug offenses), race of the exoneree, and whether key tags like “DNA evidence” or “official misconduct” were involved.
+
+- County focus: Since Cook County dominates the exoneration dataset and is the sole location in the crime dataset, this geographic focus lets users meaningfully explore the relationship between the two datasets in one place.
+
+We also plan to implement clickable visual elements, such as a bar chart of the most common crimes that lead to exoneration. When a user clicks on a crime type (e.g., sexual assault), the entire dashboard would update to show:
+
+- The total number of crimes of that type reported in Chicago since 2010,
+
+- The number of exonerations tied to those crimes,
+
+- And characteristics of those exoneration cases (race, age, evidence types, etc.)
+
+Interactivity for Exploration
+
+To make the interactive feel interactive—not just visually dynamic—we’ll let users control their own exploration. This includes dropdowns, checkboxes, and sliders that filter the data and update charts in real time. Some specific ideas include:
+
+- A year range slider to focus on certain time periods (e.g., post-2015),
+
+- A race selector to explore how trends differ across racial groups,
+
+- A checkbox panel for key exoneration tags like false confessions, perjury, or mistaken witness ID.
+
+These features give users the tools to ask their own questions: Have exonerations increased in years when certain types of crimes spiked? Do some evidence types appear more often for Black exonerees than White exonerees?
+
+Personal and Guided Experience
+
+While not all dashboards lend themselves to personalization, we see potential here. For example, users could filter the data by their own neighborhood (using ZIP code or community area) if we incorporate geolocation info from the crime data. This would allow a visitor from Chicago to explore: How many crimes have been reported near me? Are any exonerations tied to my area? This local perspective could help personalize the broader systemic patterns we’re analyzing.
+
+We also plan to guide users through the dashboard with annotations and highlighted callouts—for example, pointing out that Cook County alone accounts for over X% of national exonerations, or flagging years with particularly high exoneration counts. These will serve as jumping-off points for users who don’t know where to start their exploration.
+
+Current Progress
+
+So far, we’ve completed cleaning both datasets and written them to .rds files for quick loading. We’ve filtered the Chicago crime data to only include cases since 2010, and we’ve cleaned the exoneration data to allow easy filtering by county, crime type, and evidence tags. We have been analyzing patterns and trying to decide on our main question that we would like our dashboard to address. Our next steps are to build the visual components using shiny, plotly, or flexdashboard, and to link them together with reactive inputs.
+
+By bringing together both datasets in an accessible and engaging format, we hope to help users better understand not just where injustice happens—but how it happens, who it affects, and what patterns lie beneath the surface.
