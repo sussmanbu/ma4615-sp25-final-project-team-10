@@ -1,9 +1,12 @@
----
+ ---
 title: Data
-description: We describe the sources of our data and the cleaning process.
+description:   This page describes the data sources and cleaning process for our project analyzing patterns in wrongful convictions and crime reporting in Cook County, IL.
 toc: true
 draft: false
+format: html
 ---
+
+
 
 ![](images/data-import-cheatsheet-thumbs.png)
 
@@ -77,5 +80,101 @@ You will
   * Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.
   * This page should be self-contained.
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+## Overview
+
+Our project uses two primary datasets:
+
+1. **[National Registry of Exonerations](https://www.law.umich.edu/special/exoneration/Pages/about.aspx)** – A public dataset documenting cases of wrongful convictions in the United States.
+2. **[Crimes - 2001 to Present (City of Chicago)](https://catalog.data.gov/dataset/crimes-2001-to-present)** – A dataset detailing reported crimes in the City of Chicago, provided by the Chicago Police Department via the City of Chicago’s data portal.
+
+These datasets help us explore not just how wrongful convictions occur, but how they compare to overall patterns in crime reporting in Cook County. The exoneration dataset provides a national view, while the crime dataset offers a granular local view of the criminal justice system in action.
+
+## Data Sources and Context
+
+### Exoneration Data
+
+- **Source**: National Registry of Exonerations (hosted by the University of Michigan)
+- **Purpose**: Tracks exonerated individuals, including their demographic information, the crime for which they were convicted, and factors contributing to their exoneration (e.g., DNA evidence, official misconduct).
+- **Link**: [Exoneration Dataset](https://www.law.umich.edu/special/exoneration/Pages/about.aspx)
+
+### Chicago Crime Data
+
+- **Source**: Chicago Police Department (via City of Chicago Data Portal)
+- **Purpose**: Logs all reported crimes in the city, including type, location, date, and whether an arrest was made.
+- **Link**: [Chicago Crimes Dataset](https://catalog.data.gov/dataset/crimes-2001-to-present)
+
+## Key Variables
+
+### Exoneration Dataset (Cleaned)
+
+| Variable               | Description |
+|------------------------|-------------|
+| `Last_Name`, `First_Name` | Name of exoneree |
+| `Age`                  | Age at time of exoneration |
+| `Race`, `Sex`          | Demographic information |
+| `State`, `County`      | Location of the conviction |
+| `Worst_Crime_Display`  | The most serious crime the exoneree was convicted of |
+| `Convicted`, `Exonerated` | Years of conviction and exoneration |
+| `Tags`, `DNA`, `MWID`, `OM`, `P/FA`, `FC` | Legal factors such as DNA evidence, mistaken witness ID, official misconduct, etc. |
+
+We renamed columns to use underscores instead of spaces and converted `Age` and `Date_of_Crime_Year` to numeric values.
+
+### Crime Dataset (Cleaned)
+
+| Variable              | Description |
+|-----------------------|-------------|
+| `ID`                  | Unique case ID |
+| `Date`                | Date of the incident (cleaned to remove time component) |
+| `Primary Type`, `Description` | Type and detailed description of the crime |
+| `Location Description` | General place where crime occurred (e.g., STREET, RESIDENCE) |
+| `Arrest`              | Whether an arrest was made |
+| `Domestic`            | Whether the crime was classified as domestic |
+| `Year`                | Year of crime |
+
+We removed columns such as `Case Number`, `Block`, `IUCR`, `FBI Code`, geolocation columns, and others not relevant to our analysis.
+
+## Cleaning Process
+
+All cleaning steps were implemented in our [`clean_data.R`](/scripts/clean_data.R) script.
+
+### For the Exoneration Data:
+- Read in the raw CSV using `read_csv()`.
+- Replaced column names with underscores using `rename_with()`.
+- Converted age and crime year to integers, removing commas where necessary.
+- Applied `mutate(across(...))` to ensure consistent handling of missing values.
+- Saved a cleaned `.rds` file to `dataset/exoneration_data_clean.rds`.
+
+### For the Crime Data:
+- Due to its size (~1.8GB), we placed it in a `dataset-ignore` folder.
+- Used `cols_only()` with `read_csv()` to load only relevant columns.
+- Filtered to crimes from **2010 onwards** using `filter(Year >= 2010)`.
+- Cleaned the `Date` column to remove timestamps using `lubridate::mdy_hms()`.
+- Dropped over a dozen unused columns to reduce file size and focus on key variables.
+- Saved the output as `crime_data_2010_clean.rds` in `dataset-ignore`.
+
+```r
+# Example cleaning snippet
+crime_data <- crime_data_raw %>%
+  filter(Year >= 2010) %>%
+  mutate(Date = as.Date(lubridate::mdy_hms(Date))) %>%
+  select(-c(
+    `Block`, `IUCR`, `Case Number`, `District`, `Ward`,
+    `Community Area`, `FBI Code`, `Latitude`, `Longitude`,
+    `X Coordinate`, `Y Coordinate`, `Updated On`
+  ))
+
+```  
   
 

@@ -1,7 +1,7 @@
 ---
 title: "BlogPost 7"
 description:  |
-  Our seventh blog post containing our insight into how our interactive will look
+  Our seventh blog post containing our insight into how our interactive will look.
 author: "Team 10 (Mango)"
 date: "2025-04-22"
 format: html

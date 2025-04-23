@@ -17,6 +17,7 @@
 
 library(tidyverse)
 library(here)
+library(readr)
 
 # Read the exoneration dataset
 exoneration_data <- read_csv(here::here("dataset", "publicspreadsheet.csv"))
@@ -50,17 +51,18 @@ crime_data_raw <- read_csv(
   here::here("dataset-ignore", "Crimes_-_2001_to_Present.csv"),
   col_types = cols_only(
     ID = col_double(),
-    Date = col_character(),
-    Primary.Type = col_character(),
-    Description = col_character(),
-    Location.Description = col_character(),
-    Arrest = col_logical(),
-    Domestic = col_logical(),
-    Year = col_integer(),
-    Latitude = col_double(),
-    Longitude = col_double()
+    `Date` = col_character(),
+    `Primary Type` = col_character(),
+    `Description` = col_character(),
+    `Location Description` = col_character(),
+    `Arrest` = col_logical(),
+    `Domestic` = col_logical(),
+    `Year` = col_integer(),
+    `Latitude` = col_double(),
+    `Longitude` = col_double()
   )
 )
+
 
 # Filter for crimes from 2010 and later
 crime_data_2010 <- crime_data_raw %>%
