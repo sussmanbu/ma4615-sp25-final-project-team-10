@@ -1,5 +1,5 @@
 ---
-title: "BlogPost6"
+title: "BlogPost 6"
 description:  |
   Our sixth blog post containing the combination of two datasets
 author: "Team 10 (Mango)"
