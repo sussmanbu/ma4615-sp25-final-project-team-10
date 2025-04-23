@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="We describe the sources of our data and the cleaning process.">
+<meta name="description" content="This page describes the data sources and cleaning process for our project analyzing patterns in wrongful convictions and crime reporting in Cook County, IL.">
 
-<title>Data – MA [46]15 Final Project Team Mango</title>
+<title>data – MA [46]15 Final Project Team Mango</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -72,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -116,21 +150,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#what-makes-a-good-data-set" id="toc-what-makes-a-good-data-set" class="nav-link active" data-scroll-target="#what-makes-a-good-data-set">What makes a good data set?</a></li>
-  <li><a href="#where-to-keep-data" id="toc-where-to-keep-data" class="nav-link" data-scroll-target="#where-to-keep-data">Where to keep data?</a>
-  <ul class="collapse">
-  <li><a href="#sharing-your-data" id="toc-sharing-your-data" class="nav-link" data-scroll-target="#sharing-your-data">Sharing your data</a></li>
-  <li><a href="#clean-data-script" id="toc-clean-data-script" class="nav-link" data-scroll-target="#clean-data-script">Clean data script</a></li>
-  </ul></li>
-  <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -141,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div>
   <div class="description">
-    We describe the sources of our data and the cleaning process.
+    This page describes the data sources and cleaning process for our project analyzing patterns in wrongful convictions and crime reporting in Cook County, IL.
   </div>
 </div>
 
@@ -218,8 +238,165 @@ ul.task-list li input[type="checkbox"] {
 <li>This page should be self-contained.</li>
 </ul></li>
 </ul>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Our project uses two primary datasets:</p>
+<ol type="1">
+<li><strong><a href="https://www.law.umich.edu/special/exoneration/Pages/about.aspx">National Registry of Exonerations</a></strong> – A public dataset documenting cases of wrongful convictions in the United States.</li>
+<li><strong><a href="https://catalog.data.gov/dataset/crimes-2001-to-present">Crimes - 2001 to Present (City of Chicago)</a></strong> – A dataset detailing reported crimes in the City of Chicago, provided by the Chicago Police Department via the City of Chicago’s data portal.</li>
+</ol>
+<p>These datasets help us explore not just how wrongful convictions occur, but how they compare to overall patterns in crime reporting in Cook County. The exoneration dataset provides a national view, while the crime dataset offers a granular local view of the criminal justice system in action.</p>
+</section>
+<section id="data-sources-and-context" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-and-context">Data Sources and Context</h2>
+<section id="exoneration-data" class="level3">
+<h3 class="anchored" data-anchor-id="exoneration-data">Exoneration Data</h3>
+<ul>
+<li><strong>Source</strong>: National Registry of Exonerations (hosted by the University of Michigan)</li>
+<li><strong>Purpose</strong>: Tracks exonerated individuals, including their demographic information, the crime for which they were convicted, and factors contributing to their exoneration (e.g., DNA evidence, official misconduct).</li>
+<li><strong>Link</strong>: <a href="https://www.law.umich.edu/special/exoneration/Pages/about.aspx">Exoneration Dataset</a></li>
+</ul>
+</section>
+<section id="chicago-crime-data" class="level3">
+<h3 class="anchored" data-anchor-id="chicago-crime-data">Chicago Crime Data</h3>
+<ul>
+<li><strong>Source</strong>: Chicago Police Department (via City of Chicago Data Portal)</li>
+<li><strong>Purpose</strong>: Logs all reported crimes in the city, including type, location, date, and whether an arrest was made.</li>
+<li><strong>Link</strong>: <a href="https://catalog.data.gov/dataset/crimes-2001-to-present">Chicago Crimes Dataset</a></li>
+</ul>
+</section>
+</section>
+<section id="key-variables" class="level2">
+<h2 class="anchored" data-anchor-id="key-variables">Key Variables</h2>
+<section id="exoneration-dataset-cleaned" class="level3">
+<h3 class="anchored" data-anchor-id="exoneration-dataset-cleaned">Exoneration Dataset (Cleaned)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 64%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Last_Name</code>, <code>First_Name</code></td>
+<td>Name of exoneree</td>
+</tr>
+<tr class="even">
+<td><code>Age</code></td>
+<td>Age at time of exoneration</td>
+</tr>
+<tr class="odd">
+<td><code>Race</code>, <code>Sex</code></td>
+<td>Demographic information</td>
+</tr>
+<tr class="even">
+<td><code>State</code>, <code>County</code></td>
+<td>Location of the conviction</td>
+</tr>
+<tr class="odd">
+<td><code>Worst_Crime_Display</code></td>
+<td>The most serious crime the exoneree was convicted of</td>
+</tr>
+<tr class="even">
+<td><code>Convicted</code>, <code>Exonerated</code></td>
+<td>Years of conviction and exoneration</td>
+</tr>
+<tr class="odd">
+<td><code>Tags</code>, <code>DNA</code>, <code>MWID</code>, <code>OM</code>, <code>P/FA</code>, <code>FC</code></td>
+<td>Legal factors such as DNA evidence, mistaken witness ID, official misconduct, etc.</td>
+</tr>
+</tbody>
+</table>
+<p>We renamed columns to use underscores instead of spaces and converted <code>Age</code> and <code>Date_of_Crime_Year</code> to numeric values.</p>
+</section>
+<section id="crime-dataset-cleaned" class="level3">
+<h3 class="anchored" data-anchor-id="crime-dataset-cleaned">Crime Dataset (Cleaned)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 63%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ID</code></td>
+<td>Unique case ID</td>
+</tr>
+<tr class="even">
+<td><code>Date</code></td>
+<td>Date of the incident (cleaned to remove time component)</td>
+</tr>
+<tr class="odd">
+<td><code>Primary Type</code>, <code>Description</code></td>
+<td>Type and detailed description of the crime</td>
+</tr>
+<tr class="even">
+<td><code>Location Description</code></td>
+<td>General place where crime occurred (e.g., STREET, RESIDENCE)</td>
+</tr>
+<tr class="odd">
+<td><code>Arrest</code></td>
+<td>Whether an arrest was made</td>
+</tr>
+<tr class="even">
+<td><code>Domestic</code></td>
+<td>Whether the crime was classified as domestic</td>
+</tr>
+<tr class="odd">
+<td><code>Year</code></td>
+<td>Year of crime</td>
+</tr>
+</tbody>
+</table>
+<p>We removed columns such as <code>Case Number</code>, <code>Block</code>, <code>IUCR</code>, <code>FBI Code</code>, geolocation columns, and others not relevant to our analysis.</p>
+</section>
+</section>
+<section id="cleaning-process" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-process">Cleaning Process</h2>
+<p>All cleaning steps were implemented in our <a href=".\scripts/clean_data.R"><code>clean_data.R</code></a> script.</p>
+<section id="for-the-exoneration-data" class="level3">
+<h3 class="anchored" data-anchor-id="for-the-exoneration-data">For the Exoneration Data:</h3>
+<ul>
+<li>Read in the raw CSV using <code>read_csv()</code>.</li>
+<li>Replaced column names with underscores using <code>rename_with()</code>.</li>
+<li>Converted age and crime year to integers, removing commas where necessary.</li>
+<li>Applied <code>mutate(across(...))</code> to ensure consistent handling of missing values.</li>
+<li>Saved a cleaned <code>.rds</code> file to <code>dataset/exoneration_data_clean.rds</code>.</li>
+</ul>
+</section>
+<section id="for-the-crime-data" class="level3">
+<h3 class="anchored" data-anchor-id="for-the-crime-data">For the Crime Data:</h3>
+<ul>
+<li>Due to its size (~1.8GB), we placed it in a <code>dataset-ignore</code> folder.</li>
+<li>Used <code>cols_only()</code> with <code>read_csv()</code> to load only relevant columns.</li>
+<li>Filtered to crimes from <strong>2010 onwards</strong> using <code>filter(Year &gt;= 2010)</code>.</li>
+<li>Cleaned the <code>Date</code> column to remove timestamps using <code>lubridate::mdy_hms()</code>.</li>
+<li>Dropped over a dozen unused columns to reduce file size and focus on key variables.</li>
+<li>Saved the output as <code>crime_data_2010_clean.rds</code> in <code>dataset-ignore</code>.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example cleaning snippet</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>crime_data <span class="ot">&lt;-</span> crime_data_raw <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">&gt;=</span> <span class="dv">2010</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">as.Date</span>(lubridate<span class="sc">::</span><span class="fu">mdy_hms</span>(Date))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Block</span><span class="st">`</span>, <span class="st">`</span><span class="at">IUCR</span><span class="st">`</span>, <span class="st">`</span><span class="at">Case Number</span><span class="st">`</span>, <span class="st">`</span><span class="at">District</span><span class="st">`</span>, <span class="st">`</span><span class="at">Ward</span><span class="st">`</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Community Area</span><span class="st">`</span>, <span class="st">`</span><span class="at">FBI Code</span><span class="st">`</span>, <span class="st">`</span><span class="at">Latitude</span><span class="st">`</span>, <span class="st">`</span><span class="at">Longitude</span><span class="st">`</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">X Coordinate</span><span class="st">`</span>, <span class="st">`</span><span class="at">Y Coordinate</span><span class="st">`</span>, <span class="st">`</span><span class="at">Updated On</span><span class="st">`</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
