@@ -11,72 +11,87 @@ execute:
   warning: false
 runtime: shiny
 ---
+
+
 ```{r}
-library(shiny)
+# Load libraries and cleaned data
 library(tidyverse)
 library(here)
 
-# Load filtered data
-exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
-crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
+exon <- read_rds(here("dataset", "exoneration_data_cook.rds"))
+crime <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
 
-```
+# 1. Prepare exoneration trends by year
+exon_trends <- exon %>%
+  mutate(Exonerated = as.integer(Exonerated)) %>%
+  filter(!is.na(Exonerated)) %>%
+  count(Year = Exonerated) %>%
+  mutate(Data = "Exonerations")
 
-```{r, context="server"}
-
-# Define UI layout
-ui <- fluidPage(
-  titlePanel("Cook County Crimes and Exonerations"),
-
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("crime_type", "Choose a Crime Type:", 
-                  choices = unique(crime_data$`Primary Type`),
-                  selected = "THEFT"),
-      sliderInput("year_range", "Select Year Range:",
-                  min = min(crime_data$Year), 
-                  max = max(crime_data$Year),
-                  value = c(2015, 2023),
-                  sep = "")
-    ),
-
-    mainPanel(
-      tabsetPanel(
-        tabPanel("Crime Trend", plotOutput("crimePlot")),
-        tabPanel("Exoneration Table", tableOutput("exonTable"))
-      )
-    )
-  )
+# 2. Map crime types to broader categories
+violent_types <- c(
+  "HOMICIDE", "CRIM SEXUAL ASSAULT", "SEX OFFENSE", "OFFENSE INVOLVING CHILDREN",
+  "ASSAULT", "ROBBERY"
 )
 
-```
+crime_cat <- crime %>%
+  mutate(Category = if_else(`Primary Type` %in% violent_types, "Violent", "Nonviolent"))
 
-```{r, context="server"}
-server <- function(input, output) {
+# 3. Summarize crime trends by year
+crime_trends <- crime_cat %>%
+  count(Year, Category) %>%
+  # total crimes per year for comparison
+  group_by(Year) %>%
+  summarize(Count = sum(n), .groups = "drop") %>%
+  mutate(Data = "Crimes")
 
-  # Plot rendering logic
-  output$crimePlot <- renderPlot({
-    crime_data %>%
-      filter(`Primary Type` == input$crime_type,
-             Year >= input$year_range[1],
-             Year <= input$year_range[2]) %>%
-      ggplot(aes(x = Year)) +
-      geom_bar(fill = "steelblue") +
-      labs(title = paste("Number of", input$crime_type, "Cases by Year"),
-           x = "Year",
-           y = "Number of Cases")
-  })
+# 4. Combine both trends into one dataset
+combined_trends <- bind_rows(
+  exon_trends %>% rename(Count = n),
+  crime_trends
+)
 
-  # Exoneration data table
-  output$exonTable <- renderTable({
-    exoneration_data
-  })
-}
+# 5. Plot both on the same chart
+ggplot(combined_trends, aes(x = Year, y = Count, color = Data)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "Cook County: Crimes vs Exonerations Over Time",
+    x = "Year",
+    y = "Count",
+    color = "Data Type"
+  ) +
+  theme_minimal()
 
-```
+library(tidyverse)
+library(here)
 
-```{r, context="server"}
-shinyApp(ui = ui, server = server)
+# Load cleaned data
+exon <- read_rds(here("dataset", "exoneration_data_cook.rds")) %>%
+  mutate(Year = as.integer(Exonerated)) %>%
+  filter(!is.na(Year)) %>%
+  count(Year) %>%
+  rename(Count = n) %>%
+  mutate(Data = "Exonerations")
+
+crime <- read_rds(here("dataset-ignore", "crime_data_2010.rds")) %>%
+  count(Year) %>%
+  rename(Count = n) %>%
+  mutate(Data = "Crimes")
+
+combined <- bind_rows(exon, crime)
+
+# Side-by-side with free y-scales
+ggplot(combined, aes(x = Year, y = Count)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ Data, scales = "free_y", ncol = 2) +
+  labs(
+    title = "Cook County: Crimes vs. Exonerations Over Time",
+    x = "Year",
+    y = "Count"
+  ) +
+  theme_minimal()
 
 ```
 
