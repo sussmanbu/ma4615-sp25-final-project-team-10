@@ -41,6 +41,13 @@ exoneration_data <- exoneration_data %>%
 # Save cleaned dataset
 write_rds(exoneration_data, file = here::here("dataset", "exoneration_data_clean.rds"))
 
+# Filter exoneration cases to only Cook County
+exoneration_data_cook <- exoneration_data %>%
+  filter(str_to_lower(County) == "cook")
+
+# Save the Cook County subset separately
+write_rds(exoneration_data_cook, file = here::here("dataset", "exoneration_data_cook.rds"))
+
 
 # DATASET #2
 library(tidyverse)
