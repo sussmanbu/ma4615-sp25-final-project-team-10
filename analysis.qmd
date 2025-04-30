@@ -68,3 +68,74 @@ You will
 -   Organization and cleanliness.
     -   Make sure to remove excessive warnings, hide all code, organize with sections or multiple pages, use bullets, etc.
     -   This page should be self-contained, i.e. provide a description of the relevant data.
+    
+    
+    
+```{r}
+library(shiny)
+library(tidyverse)
+library(here)
+
+# Load filtered data
+exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
+crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
+
+```
+
+```{r, context="server"}
+
+# Define UI layout
+ui <- fluidPage(
+  titlePanel("Cook County Crimes and Exonerations"),
+
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("crime_type", "Choose a Crime Type:", 
+                  choices = unique(crime_data$`Primary Type`),
+                  selected = "THEFT"),
+      sliderInput("year_range", "Select Year Range:",
+                  min = min(crime_data$Year), 
+                  max = max(crime_data$Year),
+                  value = c(2015, 2023),
+                  sep = "")
+    ),
+
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Crime Trend", plotOutput("crimePlot")),
+        tabPanel("Exoneration Table", tableOutput("exonTable"))
+      )
+    )
+  )
+)
+
+```
+
+```{r, context="server"}
+server <- function(input, output) {
+
+  # Plot rendering logic
+  output$crimePlot <- renderPlot({
+    crime_data %>%
+      filter(`Primary Type` == input$crime_type,
+             Year >= input$year_range[1],
+             Year <= input$year_range[2]) %>%
+      ggplot(aes(x = Year)) +
+      geom_bar(fill = "steelblue") +
+      labs(title = paste("Number of", input$crime_type, "Cases by Year"),
+           x = "Year",
+           y = "Number of Cases")
+  })
+
+  # Exoneration data table
+  output$exonTable <- renderTable({
+    exoneration_data
+  })
+}
+
+```
+
+```{r, context="server"}
+shinyApp(ui = ui, server = server)
+
+```
