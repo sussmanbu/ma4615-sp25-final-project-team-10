@@ -2,7 +2,7 @@
 title: "Blog Post 8"
 description: "Interactive exploration of Cook County exonerations and crime data"
 author: "Team 10 (Mango)"
-date: "2025-03-24"
+date: "2025-04-30"
 format: html
 editor: visual
 execute:
