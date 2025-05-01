@@ -12,6 +12,12 @@ execute:
 runtime: shiny
 ---
 
+As we move forward, our exploratory data analysis will deepen beyond simple time‐series comparisons. We plan to break down both crime and exoneration counts by subcategories—first into “violent” versus “nonviolent” offenses and then into more specific crime types—to see which segments drive the overall trends. We’ll layer in demographic and spatial context by merging tract-level data (such as median income and racial composition) and mapping crime locations alongside exoneration sites. We also intend to examine lagged relationships—testing whether spikes in certain crimes are followed, after a predictable delay, by increases in exonerations of those same offenses. Finally, we’ll look to bring in auxiliary data—like police staffing levels, the opening dates of conviction integrity units, or relevant policy changes—to see how these external factors coincide with shifts in exoneration rates.
+
+For our central thesis, we are thinking of saying that, although reported crime volumes in Cook County have fluctuated over the past decade, the proportion of convictions that ultimately result in exonerations has steadily increased—especially for violent offenses. This suggests that enhanced post-conviction review mechanisms are catching more wrongful convictions, even if the overall exoneration rate remains low relative to total convictions. Every subsequent analysis in this project will serve to quantify the growth of that exoneration rate, demonstrate its variation across crime types and demographic groups, and explore the systemic factors that drive these patterns.
+
+To ensure our findings are both clear and compelling, we will polish every visualization and table with careful attention to detail. Each figure will feature a concise, descriptive title—such as “Annual Exoneration Rate vs. Conviction Volume, Cook County, 2010–2023”—along with a one-sentence caption that highlights the key insight. We’ll annotate notable inflection points, like the launch of a new conviction integrity unit or a dramatic spike in exonerations, to guide readers’ attention. Consistent, color-blind–friendly palettes and a unified theme (minimal gridlines, clear axis labels, balanced line weights) will tie the visuals together. And in our Shiny embed, interactive elements—tooltips, hover highlights, and dynamic filters—will invite readers to explore the data themselves, making the story both informative and engaging.
+
 
 ```{r}
 # Load libraries and cleaned data

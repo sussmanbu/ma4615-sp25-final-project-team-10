@@ -69,9 +69,10 @@ You will
     -   Make sure to remove excessive warnings, hide all code, organize with sections or multiple pages, use bullets, etc.
     -   This page should be self-contained, i.e. provide a description of the relevant data.
     
-    
+  
     
 ```{r}
+# The
 library(shiny)
 library(tidyverse)
 library(here)
