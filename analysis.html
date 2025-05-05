@@ -265,70 +265,263 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>This page should be self-contained, i.e.&nbsp;provide a description of the relevant data.</li>
 </ul></li>
 </ul>
+<p>Research Motivation and Questions</p>
+<p>Our project seeks to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?</p>
+<p>We are particularly interested in demographic variables (e.g., race, sex, age), case-related variables (e.g., type of crime, DNA involvement), and legal procedures (e.g., mistaken witness identification). We hypothesize that wrongful convictions involving false evidence may disproportionately affect specific racial groups or younger defendants and may correlate with the absence of forensic support (e.g., DNA). These hypotheses are explored both through descriptive plots and through logistic regression modeling.</p>
+<p>Data Sources and Collection</p>
+<ol type="1">
+<li><p>National Registry of Exonerations (NRE) This dataset was collected by a joint effort between the University of Michigan Law School, the University of California Irvine, and Michigan State University College of Law. It documents over 3,600 cases of wrongful convictions in the United States, along with rich details such as the race, age, and sex of exonerees, type of crime, and contributing factors like official misconduct, mistaken witness identification, or DNA evidence. It was curated to support legal research, reform efforts, and public awareness regarding flaws in the justice system.</p></li>
+<li><p>Chicago Crimes 2001–Present Dataset This dataset is maintained by the Chicago Police Department and published through the City of Chicago’s open data portal. It records all reported crimes in Chicago, including type, location, time, and whether an arrest was made. While we’ve cleaned and prepared this dataset, our current analysis is focused on the NRE data, with plans to incorporate Chicago crime patterns in future modeling.</p></li>
+</ol>
+<p>We cleaned and used exoneration_data_clean.rds and crime_data_2010_clean.rds. The NRE dataset provides case-level features such as: ·Race, Sex, Age ·State, County ·Worst_Crime_Display ·Convicted, Exonerated ·DNA, MWID, OM, P/FA, FC: Tags for DNA evidence, mistaken witness ID, official misconduct, perjury/false accusation, and false confession.</p>
+<p>We derived a new binary variable, False_Evidence, defined as 1 if any of OM, P/FA, or FC is present. This is our primary modeling outcome.</p>
+<p>Exploratory Data Insights</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>here() starts at C:/MA615/ma4615-sp25-final-project-team-10</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load filtered data</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"dataset"</span>, <span class="st">"exoneration_data_cook.rds"</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>crime_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"dataset-ignore"</span>, <span class="st">"crime_data_2010.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-context="server">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI layout</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="st">"Cook County Crimes and Exonerations"</span>),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"crime_type"</span>, <span class="st">"Choose a Crime Type:"</span>, </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">choices =</span> <span class="fu">unique</span>(crime_data<span class="sc">$</span><span class="st">`</span><span class="at">Primary Type</span><span class="st">`</span>),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">selected =</span> <span class="st">"THEFT"</span>),</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sliderInput</span>(<span class="st">"year_range"</span>, <span class="st">"Select Year Range:"</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">min =</span> <span class="fu">min</span>(crime_data<span class="sc">$</span>Year), </span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">max =</span> <span class="fu">max</span>(crime_data<span class="sc">$</span>Year),</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">2015</span>, <span class="dv">2023</span>),</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sep =</span> <span class="st">""</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabsetPanel</span>(</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tabPanel</span>(<span class="st">"Crime Trend"</span>, <span class="fu">plotOutput</span>(<span class="st">"crimePlot"</span>)),</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tabPanel</span>(<span class="st">"Exoneration Table"</span>, <span class="fu">tableOutput</span>(<span class="st">"exonTable"</span>))</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-context="server">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plot rendering logic</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>crimePlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    crime_data <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="st">`</span><span class="at">Primary Type</span><span class="st">`</span> <span class="sc">==</span> input<span class="sc">$</span>crime_type,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             Year <span class="sc">&gt;=</span> input<span class="sc">$</span>year_range[<span class="dv">1</span>],</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>             Year <span class="sc">&lt;=</span> input<span class="sc">$</span>year_range[<span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year)) <span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Number of"</span>, input<span class="sc">$</span>crime_type, <span class="st">"Cases by Year"</span>),</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Exoneration data table</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>exonTable <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    exoneration_data</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-context="server">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p></p><div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div><p></p>
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Insight: Drug Possession or Sale and Murder clearly top the list, far exceeding other offenses in frequency. The prominence of these charges may reflect both the scale of their prosecution and their susceptibility to wrongful conviction—drug cases often involve questionable search procedures, while murder cases tend to rely on high-pressure investigations that may introduce coerced confessions or witness errors. Sexual Assault also ranks high, likely due to the significant role of flawed or misinterpreted forensic evidence in such cases. While crimes like Robbery and Burglary appear in the top ten, they occur at much lower rates. The dominance of severe offenses in this chart suggests that systemic problems—such as official misconduct, unreliable testimony, or investigative bias—are particularly prevalent, or at least more frequently uncovered, in high-stakes convictions.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Insights: This histogram shows the distribution of exonerees’ ages at the time of their conviction. The majority were between 18 and 30 years old, suggesting that young adults are especially vulnerable to wrongful convictions. This pattern may stem from factors such as limited access to legal representation, increased susceptibility to coercion during interrogations, and targeted policing practices that disproportionately affect younger individuals. The distribution declines steadily with age, with very few exonerees convicted after age 50. These findings are consistent with existing research indicating that youth, particularly from marginalized backgrounds, are at heightened risk of being falsely accused or convicted.</p>
+<p>Modeling and Inference</p>
+<p>We used logistic regression to examine predictors of false evidence:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = False_Evidence ~ Race + Sex + Age + Worst_Crime_Display + 
+    DNA_binary + MWID_binary, family = binomial, data = model_data)
+
+Coefficients:
+                                                   Estimate Std. Error z value
+(Intercept)                                        16.02742  827.63812   0.019
+RaceBlack                                           1.03866    0.46944   2.213
+RaceDon't Know                                     16.96728  933.93609   0.018
+RaceHispanic                                        0.82617    0.48066   1.719
+RaceNative American                                 0.11322    0.65442   0.173
+RaceOther                                          -0.19038    0.71371  -0.267
+RaceWhite                                           0.47518    0.46977   1.012
+SexMale                                             0.73772    0.14830   4.975
+Age                                                -0.01152    0.00472  -2.440
+Worst_Crime_DisplayArson                          -16.36825  827.63808  -0.020
+Worst_Crime_DisplayAssault                        -14.98970  827.63801  -0.018
+Worst_Crime_DisplayAttempt, Nonviolent            -17.01855  827.63932  -0.021
+Worst_Crime_DisplayAttempt, Violent               -14.33418  827.63839  -0.017
+Worst_Crime_DisplayAttempted Murder               -15.19084  827.63801  -0.018
+Worst_Crime_DisplayBribery                        -17.02215  827.63835  -0.021
+Worst_Crime_DisplayBurglary/Unlawful Entry        -15.91454  827.63809  -0.019
+Worst_Crime_DisplayChild Abuse                    -16.54550  827.63813  -0.020
+Worst_Crime_DisplayChild Sex Abuse                -14.22965  827.63800  -0.017
+Worst_Crime_DisplayConspiracy                     -17.01638  827.63834  -0.021
+Worst_Crime_DisplayDependent Adult Abuse          -33.28804 2538.26702  -0.013
+Worst_Crime_DisplayDestruction of Property        -16.71760  827.63902  -0.020
+Worst_Crime_DisplayDrug Possession or Sale        -16.48286  827.63798  -0.020
+Worst_Crime_DisplayFailure to Pay Child Support   -33.54563 1864.89364  -0.018
+Worst_Crime_DisplayFiling a False Report            0.35118 2538.26702   0.000
+Worst_Crime_DisplayForgery                        -15.51443  827.63896  -0.019
+Worst_Crime_DisplayFraud                          -15.78224  827.63803  -0.019
+Worst_Crime_DisplayHarassment                       0.24061 2538.26707   0.000
+Worst_Crime_DisplayImmigration                     -0.54408 1456.59414   0.000
+Worst_Crime_DisplayKidnapping                     -15.69726  827.63811  -0.019
+Worst_Crime_DisplayManslaughter                   -15.78125  827.63802  -0.019
+Worst_Crime_DisplayMenacing                        -0.28608 1883.39475   0.000
+Worst_Crime_DisplayMilitary Justice Offense        -0.83457 2538.26702   0.000
+Worst_Crime_DisplayMurder                         -14.44534  827.63798  -0.017
+Worst_Crime_DisplayObstruction of Justice         -15.36944  827.63892  -0.019
+Worst_Crime_DisplayOfficial Misconduct            -15.46930  827.63880  -0.019
+Worst_Crime_DisplayOther                          -32.88000 2538.26707  -0.013
+Worst_Crime_DisplayOther Nonviolent Felony        -17.42766  827.63809  -0.021
+Worst_Crime_DisplayOther Nonviolent Misdemeanor   -16.10496  827.63825  -0.019
+Worst_Crime_DisplayOther Violent Felony           -15.81255  827.63815  -0.019
+Worst_Crime_DisplayOther Violent Misdemeanor      -15.56821  827.63871  -0.019
+Worst_Crime_DisplayPerjury                         -0.28690 1352.64415   0.000
+Worst_Crime_DisplayPossession of Stolen Property  -17.36897  827.63903  -0.021
+Worst_Crime_DisplayRobbery                        -15.54097  827.63800  -0.019
+Worst_Crime_DisplaySex Offender Registration      -33.53812  906.90208  -0.037
+Worst_Crime_DisplaySexual Assault                 -15.23539  827.63798  -0.018
+Worst_Crime_DisplaySolicitation                   -16.01731  827.63888  -0.019
+Worst_Crime_DisplayStalking                       -16.41285  827.63891  -0.020
+Worst_Crime_DisplaySupporting Terrorism             0.18933 1453.59670   0.000
+Worst_Crime_DisplayTax Evasion/Fraud              -14.84393  827.63869  -0.018
+Worst_Crime_DisplayTheft                          -16.57169  827.63809  -0.020
+Worst_Crime_DisplayThreats                        -17.13255  827.63834  -0.021
+Worst_Crime_DisplayTraffic Offense                -15.71428  827.63828  -0.019
+Worst_Crime_DisplayWeapon Possession or Sale      -16.15556  827.63802  -0.020
+DNA_binary                                         -0.45439    0.13454  -3.377
+MWID_binary                                        -1.71540    0.12540 -13.680
+                                                 Pr(&gt;|z|)    
+(Intercept)                                      0.984550    
+RaceBlack                                        0.026930 *  
+RaceDon't Know                                   0.985505    
+RaceHispanic                                     0.085647 .  
+RaceNative American                              0.862648    
+RaceOther                                        0.789666    
+RaceWhite                                        0.311769    
+SexMale                                          6.54e-07 ***
+Age                                              0.014679 *  
+Worst_Crime_DisplayArson                         0.984221    
+Worst_Crime_DisplayAssault                       0.985550    
+Worst_Crime_DisplayAttempt, Nonviolent           0.983594    
+Worst_Crime_DisplayAttempt, Violent              0.986182    
+Worst_Crime_DisplayAttempted Murder              0.985356    
+Worst_Crime_DisplayBribery                       0.983591    
+Worst_Crime_DisplayBurglary/Unlawful Entry       0.984659    
+Worst_Crime_DisplayChild Abuse                   0.984050    
+Worst_Crime_DisplayChild Sex Abuse               0.986283    
+Worst_Crime_DisplayConspiracy                    0.983597    
+Worst_Crime_DisplayDependent Adult Abuse         0.989536    
+Worst_Crime_DisplayDestruction of Property       0.983885    
+Worst_Crime_DisplayDrug Possession or Sale       0.984111    
+Worst_Crime_DisplayFailure to Pay Child Support  0.985648    
+Worst_Crime_DisplayFiling a False Report         0.999890    
+Worst_Crime_DisplayForgery                       0.985044    
+Worst_Crime_DisplayFraud                         0.984786    
+Worst_Crime_DisplayHarassment                    0.999924    
+Worst_Crime_DisplayImmigration                   0.999702    
+Worst_Crime_DisplayKidnapping                    0.984868    
+Worst_Crime_DisplayManslaughter                  0.984787    
+Worst_Crime_DisplayMenacing                      0.999879    
+Worst_Crime_DisplayMilitary Justice Offense      0.999738    
+Worst_Crime_DisplayMurder                        0.986075    
+Worst_Crime_DisplayObstruction of Justice        0.985184    
+Worst_Crime_DisplayOfficial Misconduct           0.985088    
+Worst_Crime_DisplayOther                         0.989665    
+Worst_Crime_DisplayOther Nonviolent Felony       0.983200    
+Worst_Crime_DisplayOther Nonviolent Misdemeanor  0.984475    
+Worst_Crime_DisplayOther Violent Felony          0.984757    
+Worst_Crime_DisplayOther Violent Misdemeanor     0.984992    
+Worst_Crime_DisplayPerjury                       0.999831    
+Worst_Crime_DisplayPossession of Stolen Property 0.983257    
+Worst_Crime_DisplayRobbery                       0.985019    
+Worst_Crime_DisplaySex Offender Registration     0.970500    
+Worst_Crime_DisplaySexual Assault                0.985313    
+Worst_Crime_DisplaySolicitation                  0.984559    
+Worst_Crime_DisplayStalking                      0.984178    
+Worst_Crime_DisplaySupporting Terrorism          0.999896    
+Worst_Crime_DisplayTax Evasion/Fraud             0.985690    
+Worst_Crime_DisplayTheft                         0.984025    
+Worst_Crime_DisplayThreats                       0.983485    
+Worst_Crime_DisplayTraffic Offense               0.984852    
+Worst_Crime_DisplayWeapon Possession or Sale     0.984426    
+DNA_binary                                       0.000731 ***
+MWID_binary                                       &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 4005.5  on 3630  degrees of freedom
+Residual deviance: 3271.1  on 3576  degrees of freedom
+AIC: 3381.1
+
+Number of Fisher Scoring iterations: 15</code></pre>
+</div>
+</div>
+<p>Model Results and Interpretation</p>
+<p>·Race: None of the race variables were statistically significant at 5%, but some showed directionality (e.g., Hispanic ·and Black with positive estimates). ·Sex: Being male had a large negative coefficient but was not statistically significant. ·Age: A marginally significant effect (p = 0.085), where older age slightly reduced the odds of false evidence. ·Crime Type: Murder and Drug Possession had positive associations but were not significant. ·DNA_binary: Positive but non-significant. ·MWID_binary: Strong and significant negative association (p &lt; 0.001), suggesting mistaken ID is less likely to co-occur with false evidence.</p>
+<p>Fit Metrics: ·Residual deviance: 69.1 on 456 df (from 146.8) ·AIC: 113.1 ·Indicates the model has strong separation power, though individual coefficients have high uncertainty due to sparse categories.</p>
+<p>Limitations Several limitations constrain our current analysis. First, the exoneration dataset captures only known wrongful convictions, meaning our findings reflect observed and documented cases—not the full universe of potential errors. Second, many variables are simplified binary tags (e.g., DNA = 1/0), which may obscure the complexity of evidence quality or legal procedures. Additionally, several crime types appear infrequently in the dataset, leading to large standard errors and unstable estimates in our logistic regression model. Finally, the analysis is cross-sectional rather than causal, and more granular or longitudinal data (e.g., case-level court transcripts, time to conviction/exoneration) would be needed to make stronger causal claims.</p>
+<p>Conclusion Our analysis highlights key patterns in wrongful conviction cases involving false evidence. While demographic and crime-related variables show suggestive trends, mistaken witness identification emerges as a significant factor—negatively associated with false evidence. This insight may indicate that false evidence and mistaken ID are distinct pathways to wrongful convictions. Young adults remain disproportionately affected, as shown in both the model and descriptive visuals.</p>
+<p>Although constrained by binary simplifications and data sparsity, our model offers a preliminary view of what systemic risk factors may underlie certain conviction outcomes. Future work should include richer data (e.g., qualitative case summaries or trial records) and build temporal models that consider changes over time. Integrating external datasets like city-level crime or policy shifts may also strengthen causal inferences.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load filtered data</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>exoneration_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"dataset"</span>, <span class="st">"exoneration_data_cook.rds"</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>crime_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"dataset-ignore"</span>, <span class="st">"crime_data_2010.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-context="server">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="st">"Cook County Crimes and Exonerations"</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">conditionalPanel</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">condition =</span> <span class="st">"input.tabs == 'Crime Trend'"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">selectInput</span>(<span class="st">"crime_type"</span>, <span class="st">"Choose a Crime Type:"</span>, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">choices =</span> <span class="fu">unique</span>(crime_data<span class="sc">$</span><span class="st">`</span><span class="at">Primary Type</span><span class="st">`</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">selected =</span> <span class="st">"THEFT"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">conditionalPanel</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">condition =</span> <span class="st">"input.tabs == 'Exoneration Rates'"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">selectInput</span>(<span class="st">"exon_crime_type"</span>, <span class="st">"Choose Exonerated Crime Type:"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">choices =</span> <span class="fu">unique</span>(exoneration_data<span class="sc">$</span>Worst_Crime_Display),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">selected =</span> <span class="st">"Murder"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sliderInput</span>(<span class="st">"year_range"</span>, <span class="st">"Select Year Range:"</span>,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">min =</span> <span class="dv">2000</span>, <span class="at">max =</span> <span class="dv">2023</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">2010</span>, <span class="dv">2023</span>), <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabsetPanel</span>(<span class="at">id =</span> <span class="st">"tabs"</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tabPanel</span>(<span class="st">"Crime Trend"</span>, <span class="fu">plotOutput</span>(<span class="st">"crimePlot"</span>)),</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tabPanel</span>(<span class="st">"Exoneration Rates"</span>, <span class="fu">plotOutput</span>(<span class="st">"exonPlot"</span>))</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-context="server">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plot rendering logic</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>crimePlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    crime_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="st">`</span><span class="at">Primary Type</span><span class="st">`</span> <span class="sc">==</span> input<span class="sc">$</span>crime_type,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>             Year <span class="sc">&gt;=</span> input<span class="sc">$</span>year_range[<span class="dv">1</span>],</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>             Year <span class="sc">&lt;=</span> input<span class="sc">$</span>year_range[<span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Year)) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Number of"</span>, input<span class="sc">$</span>crime_type, <span class="st">"Cases by Year"</span>),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a> output<span class="sc">$</span>exonPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">req</span>(input<span class="sc">$</span>exon_crime_type)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  selected_crime <span class="ot">&lt;-</span> input<span class="sc">$</span>exon_crime_type</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  exoneration_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      County <span class="sc">==</span> <span class="st">"Cook"</span>,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>      Race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Black"</span>, <span class="st">"White"</span>, <span class="st">"Hispanic"</span>, <span class="st">"Asian"</span>, <span class="st">"Other"</span>, <span class="st">"Don't Know"</span>),</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>      Worst_Crime_Display <span class="sc">==</span> selected_crime</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Exonerated, Race) <span class="sc">%&gt;%</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Exonerations =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Exonerated <span class="sc">&gt;=</span> input<span class="sc">$</span>year_range[<span class="dv">1</span>], Exonerated <span class="sc">&lt;=</span> input<span class="sc">$</span>year_range[<span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Exonerated, <span class="at">y =</span> Exonerations, <span class="at">color =</span> Race)) <span class="sc">+</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Exonerations Over Time –"</span>, selected_crime),</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"Year of Exoneration"</span>,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Number of Exonerations"</span>,</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"Race"</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-context="server">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app5d3c10924f3b36d13f598a1596cd0838/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
 </div>
 </div>
 
