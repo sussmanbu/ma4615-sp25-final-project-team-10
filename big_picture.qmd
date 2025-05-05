@@ -33,43 +33,84 @@ Your Big Data page should also include a small interactive dashboard. The dashbo
 
 library(shiny)
 library(tidyverse)
-options("readr.edition" = 1) # keep this to ensure you can download the data
+library(here)
+
+# Load filtered data
+exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
+crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
 
 
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
+  titlePanel("Cook County Crimes and Exonerations"),
 
-  # App title ----
-  titlePanel("Hello Shiny!"),
+  sidebarLayout(
+    sidebarPanel(
+      conditionalPanel(
+        condition = "input.tabs == 'Crime Trend'",
+        selectInput("crime_type", "Choose a Crime Type:", 
+                    choices = unique(crime_data$`Primary Type`),
+                    selected = "THEFT")
+      ),
+      conditionalPanel(
+        condition = "input.tabs == 'Exoneration Rates'",
+        selectInput("exon_crime_type", "Choose Exonerated Crime Type:",
+                    choices = unique(exoneration_data$Worst_Crime_Display),
+                    selected = "Murder")
+      ),
+      sliderInput("year_range", "Select Year Range:",
+                  min = 2000, max = 2023, value = c(2010, 2023), sep = "")
+    ),
 
-  # Sidebar layout with input and output definitions ----
-  verticalLayout(
-      # Input: Slider for the number of bins ----
-      sliderInput(inputId = "bins",
-                  label = "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30),
-
-      # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
-
+    mainPanel(
+      tabsetPanel(id = "tabs",
+        tabPanel("Crime Trend", plotOutput("crimePlot")),
+        tabPanel("Exoneration Rates", plotOutput("exonPlot"))
+      )
+    )
   )
 )
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
-  # The URL below has to point to a dataset on your github pages website
-  # I recommend creating a small-ish rds file that has only the data relevant to 
-  # the interactive.
-  data <- read_rds("https://sussmanbu.github.io/ma4615-final-project-quarto/dataset_for_shiny/combined_regional_data.rds")
-  
-  output$distPlot <- renderPlot({
-    ggplot(data, aes(x = refusal_rate)) +
-      geom_histogram(bins = input$bins + 1)
 
+  # Plot rendering logic
+  output$crimePlot <- renderPlot({
+    crime_data %>%
+      filter(`Primary Type` == input$crime_type,
+             Year >= input$year_range[1],
+             Year <= input$year_range[2]) %>%
+      ggplot(aes(x = Year)) +
+      geom_bar(fill = "steelblue") +
+      labs(title = paste("Number of", input$crime_type, "Cases by Year"),
+           x = "Year",
+           y = "Number of Cases")
   })
 
+
+ output$exonPlot <- renderPlot({
+  req(input$exon_crime_type)
+  selected_crime <- input$exon_crime_type
+
+  exoneration_data %>%
+    filter(
+      County == "Cook",
+      Race %in% c("Black", "White", "Hispanic", "Asian", "Other", "Don't Know"),
+      Worst_Crime_Display == selected_crime
+    ) %>%
+    group_by(Exonerated, Race) %>%
+    summarise(Exonerations = n(), .groups = "drop") %>%
+    filter(Exonerated >= input$year_range[1], Exonerated <= input$year_range[2]) %>%
+    ggplot(aes(x = Exonerated, y = Exonerations, color = Race)) +
+    geom_line(size = 1.2, na.rm = TRUE) +
+    labs(
+      title = paste("Exonerations Over Time –", selected_crime),
+      x = "Year of Exoneration",
+      y = "Number of Exonerations",
+      color = "Race"
+    ) +
+    theme_minimal()
+})
 }
 
 # Create Shiny app ----
@@ -93,7 +134,33 @@ I recommend keeping the data used for the shiny interactive relatively small, th
 
 
 
-## Rubric: On this page
+## Behind the Exoneration Surge: A Racial Reckoning
+
+Thesis Statement:
+In Cook County, Black defendants are exonerated at far higher rates than white defendants—especially for violent crimes—revealing deep racial disparities in who is wrongly convicted and later cleared.
+
+Explanation:
+This page explores a troubling pattern in Cook County’s justice system: violent crimes are more likely to lead to exoneration than non-violent crimes, and Black defendants are exonerated at significantly higher rates than white defendants—often 1.5 to 2 times as often. That doesn’t mean Black people are more likely to be innocent. It means they were more likely to be wrongly convicted in the first place.
+
+By comparing exoneration rates by crime type and race over time, we uncover how systemic bias can shape not just who is punished, but also who is eventually vindicated. These disparities don’t just reflect flaws in individual cases—they reveal larger patterns of racial injustice built into the system of arrest, prosecution, and review.
+
+Creativity:
+When we think of exonerations, we often picture a broken system finally setting things right. But in Cook County, the patterns of who gets exonerated tell a more disturbing story—not just about justice delayed, but justice distorted.
+
+Start with the crime. Violent offenses like murder and assault are more likely to be overturned than non-violent ones. That might sound logical—after all, they get more scrutiny. But that also means wrongful convictions for the most serious charges may be shockingly common.
+
+Then look at race. Black defendants are exonerated far more often than white defendants—not because they’re committing more crimes, but because they’re more likely to be wrongly accused, convicted, and imprisoned. These aren’t isolated mistakes. They’re signs of a system that historically leans harder on Black communities at every stage—from arrest to trial to sentencing.
+
+And then, the final twist: the same system that over-polices and over-convicts Black defendants is the one that only sometimes gets around to clearing them. The exoneration is not proof that the system worked—it’s proof that it failed.
+
+Each of the lines on our graph tells part of that story. They rise when justice catches up—but they exist in the first place because injustice got there first.
+
+Interactive component:
+Use the “Crime Trend” tab to see how the number of reported crimes in Cook County has changed over time. You can filter by specific offense types (like Theft or Assault) and focus on particular time periods using the slider. This gives important context for understanding the scale and types of criminal charges pursued in the county each year.
+
+Then, switch to the “Exoneration Rates” tab to explore how often people were later cleared of those crimes—broken down by race. You’ll see that Black defendants are consistently exonerated more often than any other group, especially for violent crimes. But that doesn’t mean they were treated fairly. It means they were more likely to be wrongly convicted in the first place.
+
+By moving between the two tabs, you can trace the full arc of Cook County’s criminal justice system—from who gets charged to who ultimately gets a second chance—and who doesn’t.
 
 
 * Title
@@ -109,7 +176,9 @@ Is it clear what can be explored using your interactive components?
 Does it enhance and reinforce your conclusions?
 * This page should be self-contained.
   
-**Note**: This page should have no code visible, i.e. use `#| echo: FALSE`.  
+**Note**: This page should have no code visible, i.e. use `#| echo: FALSE`. 
+
+
 
 
 

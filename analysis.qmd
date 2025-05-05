@@ -73,7 +73,6 @@ You will
   
     
 ```{r}
-# The
 library(shiny)
 library(tidyverse)
 library(here)
@@ -86,26 +85,31 @@ crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
 
 ```{r, context="server"}
 
-# Define UI layout
 ui <- fluidPage(
   titlePanel("Cook County Crimes and Exonerations"),
 
   sidebarLayout(
     sidebarPanel(
-      selectInput("crime_type", "Choose a Crime Type:", 
-                  choices = unique(crime_data$`Primary Type`),
-                  selected = "THEFT"),
+      conditionalPanel(
+        condition = "input.tabs == 'Crime Trend'",
+        selectInput("crime_type", "Choose a Crime Type:", 
+                    choices = unique(crime_data$`Primary Type`),
+                    selected = "THEFT")
+      ),
+      conditionalPanel(
+        condition = "input.tabs == 'Exoneration Rates'",
+        selectInput("exon_crime_type", "Choose Exonerated Crime Type:",
+                    choices = unique(exoneration_data$Worst_Crime_Display),
+                    selected = "Murder")
+      ),
       sliderInput("year_range", "Select Year Range:",
-                  min = min(crime_data$Year), 
-                  max = max(crime_data$Year),
-                  value = c(2015, 2023),
-                  sep = "")
+                  min = 2000, max = 2023, value = c(2010, 2023), sep = "")
     ),
 
     mainPanel(
-      tabsetPanel(
+      tabsetPanel(id = "tabs",
         tabPanel("Crime Trend", plotOutput("crimePlot")),
-        tabPanel("Exoneration Table", tableOutput("exonTable"))
+        tabPanel("Exoneration Rates", plotOutput("exonPlot"))
       )
     )
   )
@@ -129,15 +133,35 @@ server <- function(input, output) {
            y = "Number of Cases")
   })
 
-  # Exoneration data table
-  output$exonTable <- renderTable({
-    exoneration_data
-  })
+
+ output$exonPlot <- renderPlot({
+  req(input$exon_crime_type)
+  selected_crime <- input$exon_crime_type
+
+  exoneration_data %>%
+    filter(
+      County == "Cook",
+      Race %in% c("Black", "White", "Hispanic", "Asian", "Other", "Don't Know"),
+      Worst_Crime_Display == selected_crime
+    ) %>%
+    group_by(Exonerated, Race) %>%
+    summarise(Exonerations = n(), .groups = "drop") %>%
+    filter(Exonerated >= input$year_range[1], Exonerated <= input$year_range[2]) %>%
+    ggplot(aes(x = Exonerated, y = Exonerations, color = Race)) +
+    geom_line(size = 1.2, na.rm = TRUE) +
+    labs(
+      title = paste("Exonerations Over Time –", selected_crime),
+      x = "Year of Exoneration",
+      y = "Number of Exonerations",
+      color = "Race"
+    ) +
+    theme_minimal()
+})
 }
 
 ```
 
 ```{r, context="server"}
 shinyApp(ui = ui, server = server)
-
 ```
+

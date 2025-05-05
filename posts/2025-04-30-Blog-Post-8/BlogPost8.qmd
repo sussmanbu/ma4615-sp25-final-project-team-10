@@ -18,7 +18,6 @@ For our central thesis, we are thinking of saying that, although reported crime 
 
 To ensure our findings are both clear and compelling, we will polish every visualization and table with careful attention to detail. Each figure will feature a concise, descriptive title—such as “Annual Exoneration Rate vs. Conviction Volume, Cook County, 2010–2023”—along with a one-sentence caption that highlights the key insight. We’ll annotate notable inflection points, like the launch of a new conviction integrity unit or a dramatic spike in exonerations, to guide readers’ attention. Consistent, color-blind–friendly palettes and a unified theme (minimal gridlines, clear axis labels, balanced line weights) will tie the visuals together. And in our Shiny embed, interactive elements—tooltips, hover highlights, and dynamic filters—will invite readers to explore the data themselves, making the story both informative and engaging.
 
-
 ```{r}
 # Load libraries and cleaned data
 library(tidyverse)
@@ -100,7 +99,3 @@ ggplot(combined, aes(x = Year, y = Count)) +
   theme_minimal()
 
 ```
-
-
-
-
