@@ -70,8 +70,93 @@ You will
     -   Make sure to remove excessive warnings, hide all code, organize with sections or multiple pages, use bullets, etc.
     -   This page should be self-contained, i.e. provide a description of the relevant data.
     
-  
-    
+Research Motivation and Questions
+
+Our project seeks to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?
+
+We are particularly interested in demographic variables (e.g., race, sex, age), case-related variables (e.g., type of crime, DNA involvement), and legal procedures (e.g., mistaken witness identification). We hypothesize that wrongful convictions involving false evidence may disproportionately affect specific racial groups or younger defendants and may correlate with the absence of forensic support (e.g., DNA). These hypotheses are explored both through descriptive plots and through logistic regression modeling.
+
+Data Sources and Collection
+
+1) National Registry of Exonerations (NRE)
+This dataset was collected by a joint effort between the University of Michigan Law School, the University of California Irvine, and Michigan State University College of Law. It documents over 3,600 cases of wrongful convictions in the United States, along with rich details such as the race, age, and sex of exonerees, type of crime, and contributing factors like official misconduct, mistaken witness identification, or DNA evidence. It was curated to support legal research, reform efforts, and public awareness regarding flaws in the justice system.
+
+2) Chicago Crimes 2001–Present Dataset
+This dataset is maintained by the Chicago Police Department and published through the City of Chicago’s open data portal. It records all reported crimes in Chicago, including type, location, time, and whether an arrest was made. While we’ve cleaned and prepared this dataset, our current analysis is focused on the NRE data, with plans to incorporate Chicago crime patterns in future modeling.
+
+
+We cleaned and used exoneration_data_clean.rds and crime_data_2010_clean.rds. The NRE dataset provides case-level features such as:
+·Race, Sex, Age
+·State, County
+·Worst_Crime_Display
+·Convicted, Exonerated
+·DNA, MWID, OM, P/FA, FC: Tags for DNA evidence, mistaken witness ID, official misconduct, perjury/false accusation, and false confession.
+
+We derived a new binary variable, False_Evidence, defined as 1 if any of OM, P/FA, or FC is present. This is our primary modeling outcome.
+
+Exploratory Data Insights
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+# Top crimes bar chart
+exoneration_data %>%
+  count(Worst_Crime_Display, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Worst_Crime_Display, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Most Common Crimes Among Exonerees",
+       x = "Crime Type",
+       y = "Count")
+```
+Insight: Drug Possession or Sale and Murder clearly top the list, far exceeding other offenses in frequency. The prominence of these charges may reflect both the scale of their prosecution and their susceptibility to wrongful conviction—drug cases often involve questionable search procedures, while murder cases tend to rely on high-pressure investigations that may introduce coerced confessions or witness errors. Sexual Assault also ranks high, likely due to the significant role of flawed or misinterpreted forensic evidence in such cases. While crimes like Robbery and Burglary appear in the top ten, they occur at much lower rates. The dominance of severe offenses in this chart suggests that systemic problems—such as official misconduct, unreliable testimony, or investigative bias—are particularly prevalent, or at least more frequently uncovered, in high-stakes convictions.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(exoneration_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
+  labs(title = "Age Distribution of Exonerees",
+       x = "Age at Conviction",
+       y = "Count")
+```
+Insights: This histogram shows the distribution of exonerees’ ages at the time of their conviction. The majority were between 18 and 30 years old, suggesting that young adults are especially vulnerable to wrongful convictions. This pattern may stem from factors such as limited access to legal representation, increased susceptibility to coercion during interrogations, and targeted policing practices that disproportionately affect younger individuals. The distribution declines steadily with age, with very few exonerees convicted after age 50. These findings are consistent with existing research indicating that youth, particularly from marginalized backgrounds, are at heightened risk of being falsely accused or convicted.
+
+
+Modeling and Inference
+
+We used logistic regression to examine predictors of false evidence:
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+model_data <- exoneration_data %>%
+  mutate(False_Evidence = if_else(!is.na(OM) | !is.na(`P/FA`) | !is.na(FC), 1, 0),
+         DNA_binary = if_else(!is.na(DNA), 1, 0),
+         MWID_binary = if_else(!is.na(MWID), 1, 0)) %>%
+  filter(!is.na(False_Evidence), !is.na(Race), !is.na(Sex), !is.na(Age), !is.na(Worst_Crime_Display))
+
+logit_model <- glm(False_Evidence ~ Race + Sex + Age + Worst_Crime_Display + DNA_binary + MWID_binary,
+                   data = model_data, family = binomial)
+summary(logit_model)
+```    
+Model Results and Interpretation
+
+·Race: None of the race variables were statistically significant at 5%, but some showed directionality (e.g., Hispanic ·and Black with positive estimates).
+·Sex: Being male had a large negative coefficient but was not statistically significant.
+·Age: A marginally significant effect (p = 0.085), where older age slightly reduced the odds of false evidence.
+·Crime Type: Murder and Drug Possession had positive associations but were not significant.
+·DNA_binary: Positive but non-significant.
+·MWID_binary: Strong and significant negative association (p < 0.001), suggesting mistaken ID is less likely to co-occur with false evidence.
+
+Fit Metrics:
+·Residual deviance: 69.1 on 456 df (from 146.8)
+·AIC: 113.1
+·Indicates the model has strong separation power, though individual coefficients have high uncertainty due to sparse categories.
+
+
+Limitations
+Several limitations constrain our current analysis. First, the exoneration dataset captures only known wrongful convictions, meaning our findings reflect observed and documented cases—not the full universe of potential errors. Second, many variables are simplified binary tags (e.g., DNA = 1/0), which may obscure the complexity of evidence quality or legal procedures. Additionally, several crime types appear infrequently in the dataset, leading to large standard errors and unstable estimates in our logistic regression model. Finally, the analysis is cross-sectional rather than causal, and more granular or longitudinal data (e.g., case-level court transcripts, time to conviction/exoneration) would be needed to make stronger causal claims.
+
+Conclusion
+Our analysis highlights key patterns in wrongful conviction cases involving false evidence. While demographic and crime-related variables show suggestive trends, mistaken witness identification emerges as a significant factor—negatively associated with false evidence. This insight may indicate that false evidence and mistaken ID are distinct pathways to wrongful convictions. Young adults remain disproportionately affected, as shown in both the model and descriptive visuals.
+
+Although constrained by binary simplifications and data sparsity, our model offers a preliminary view of what systemic risk factors may underlie certain conviction outcomes. Future work should include richer data (e.g., qualitative case summaries or trial records) and build temporal models that consider changes over time. Integrating external datasets like city-level crime or policy shifts may also strengthen causal inferences.
+
 ```{r}
 library(shiny)
 library(tidyverse)
