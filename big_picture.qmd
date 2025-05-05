@@ -144,6 +144,76 @@ This page explores a troubling pattern in Cook County’s justice system: violen
 
 By comparing exoneration rates by crime type and race over time, we uncover how systemic bias can shape not just who is punished, but also who is eventually vindicated. These disparities don’t just reflect flaws in individual cases—they reveal larger patterns of racial injustice built into the system of arrest, prosecution, and review.
 
+Figure 1: Exonerations by Crime Type
+```{r}
+exoneration_data %>%
+  count(Worst_Crime_Display, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Worst_Crime_Display, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Most Common Crimes Among Exonerees",
+       x = "Crime Type",
+       y = "Count")
+```
+Interpretation: Murder and Drug Possession lead the exoneration count, suggesting the most serious charges are also the most error-prone. These aren’t minor slip-ups—they’re signs of deeper systemic failures. Murder convictions in particular often come from high-pressure investigations where mistakes, misconduct, or bias are more likely to occur.
+
+Figure 2:Age Distribution of Exonerees
+```{r}
+ggplot(exoneration_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
+  labs(title = "Age at Conviction of Exonerees",
+       x = "Age",
+       y = "Count")
+```
+Interpretation: Most exonerees were convicted between the ages of 18 and 30—young adults at the mercy of a complex legal system. Youth are more susceptible to false confessions, legal pressure, and poor representation. These aren’t just numbers—they reflect whose lives were most disrupted.
+
+Figure 3:Racial Disparities in Exonerations (Cook County Only)
+```{r}
+cook_data <- exoneration_data %>%
+  filter(County == "Cook")
+
+cook_data %>%
+  count(Race) %>%
+  ggplot(aes(x = reorder(Race, n), y = n)) +
+  geom_col(fill = "darkred") +
+  coord_flip() +
+  labs(title = "Exonerations by Race in Cook County",
+       x = "Race",
+       y = "Count")
+```
+Interpretation: Black defendants dominate Cook County’s exoneration counts. That doesn’t mean they were treated fairly—it means they were more likely to be wrongfully convicted in the first place. The system isn’t correcting the error; it’s revealing how often it targeted the same group.
+
+Figure 4:Racial Proportion of Exonerations by Violent Crime in Cook County
+```{r}
+library(tidyverse)
+violent_crimes <- c("Murder", "Robbery", "Sexual Assault", "Assault")
+
+cook_data <- exoneration_data %>%
+  filter(County == "Cook", Worst_Crime_Display %in% violent_crimes) %>%
+  count(Worst_Crime_Display, Race) %>%
+  group_by(Worst_Crime_Display) %>%
+  mutate(Proportion = n / sum(n))
+
+ggplot(cook_data, aes(x = Worst_Crime_Display, y = Proportion, fill = Race)) +
+  geom_col(position = "stack") +
+  labs(title = "Racial Proportion of Exonerations by Violent Crime in Cook County",
+       x = "Crime Type",
+       y = "Proportion",
+       fill = "Race") +
+  theme_minimal()
+```
+Interpretation:
+This chart illustrates the racial breakdown of exonerations across four major categories of violent crimes in Cook County: Murder, Robbery, Assault, and Sexual Assault. In each category, Black defendants make up the overwhelming majority of those exonerated. In Robbery and Sexual Assault cases in particular, Black exonerees account for nearly all recorded exonerations.
+
+This pattern does not reflect who commits crimes—it reveals who is more likely to be wrongfully convicted. The fact that Black defendants are exonerated at such disproportionate rates suggests that systemic bias operates not just at the point of conviction, but in the very mechanisms that later uncover and correct injustice. In other words, exoneration doesn’t prove the system worked—it shows where it broke.
+
+Summary & Reflection:
+The thesis was simple: In Cook County, Black defendants are exonerated at much higher rates than white defendants—especially for violent crimes. Our figures confirm this, painting a portrait of a justice system that leans harder on Black communities and reserves its rare corrections for only the most severe cases.
+
+Our goal wasn’t just to show who gets exonerated—but to ask why they needed to be in the first place. These aren’t isolated errors. They are symptoms of a system that has long criminalized race and poverty more than it has pursued truth.
+
+
 Creativity:
 When we think of exonerations, we often picture a broken system finally setting things right. But in Cook County, the patterns of who gets exonerated tell a more disturbing story—not just about justice delayed, but justice distorted.
 
