@@ -34,6 +34,10 @@ Your Big Data page should also include a small interactive dashboard. The dashbo
 library(shiny)
 library(tidyverse)
 library(here)
+library(dplyr)      # for %>%
+library(ggplot2)
+library(readr)
+
 
 # Load filtered data
 exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
@@ -146,6 +150,15 @@ By comparing exoneration rates by crime type and race over time, we uncover how 
 
 Figure 1: Exonerations by Crime Type
 ```{r}
+# Load all needed packages right here
+library(tidyverse)   # brings in ggplot2, dplyr, %>%, etc.
+library(here)
+# Load filtered data
+exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
+crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
+
+
+
 exoneration_data %>%
   count(Worst_Crime_Display, sort = TRUE) %>%
   top_n(10) %>%
@@ -170,6 +183,10 @@ Interpretation: Most exonerees were convicted between the ages of 18 and 30—yo
 
 Figure 3:Racial Disparities in Exonerations (Cook County Only)
 ```{r}
+# Load all needed packages right here
+library(tidyverse)   # brings in ggplot2, dplyr, %>%, etc.
+library(here)
+
 cook_data <- exoneration_data %>%
   filter(County == "Cook")
 
@@ -187,6 +204,8 @@ Interpretation: Black defendants dominate Cook County’s exoneration counts. Th
 Figure 4:Racial Proportion of Exonerations by Violent Crime in Cook County
 ```{r}
 library(tidyverse)
+# Load all needed packages right here
+library(here)
 violent_crimes <- c("Murder", "Robbery", "Sexual Assault", "Assault")
 
 cook_data <- exoneration_data %>%

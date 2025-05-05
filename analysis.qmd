@@ -96,7 +96,15 @@ We derived a new binary variable, False_Evidence, defined as 1 if any of OM, P/F
 
 Exploratory Data Insights
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
 library(tidyverse)
+library(here)
+
+# Load cleaned exoneration and crime data
+exoneration_data <- read_rds(here("dataset", "exoneration_data_clean.rds"))
+crime_data       <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
+
+
 # Top crimes bar chart
 exoneration_data %>%
   count(Worst_Crime_Display, sort = TRUE) %>%
