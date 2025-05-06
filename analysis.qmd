@@ -3,72 +3,11 @@ title: Analysis
 description: Here we provide a detailed analysis using more sophisticated statistics techniques.
 toc: true
 draft: false
-runtime: shiny
+
 ---
 
 ![](https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg)
 
-This comes from the file `analysis.qmd`.
-
-We describe here our detailed data analysis. This page will provide an overview of what questions you addressed, illustrations of relevant aspects of the data with tables and figures, and a statistical model that attempts to answer part of the question. You'll also reflect on next steps and further analysis.
-
-The audience for this page is someone like your class mates, so you can expect that they have some level of statistical and quantitative sophistication and understand ideas like linear and logistic regression, coefficients, confidence intervals, overfitting, etc. 
-
-While the exact number of figures and tables will vary and depend on your analysis, you should target around 5 to 6. An overly long analysis could lead to losing points.
-If you want you can link back to your blog posts or create separate pages with more details.
-
-The style of this paper should aim to be that of an academic paper. 
-I don't expect this to be of publication quality but you should keep that aim in mind.
-Avoid using "we" too frequently, for example "We also found that ...". Describe your methodology and your findings but don't describe your whole process.
-
-### Example of loading data
-
-The code below shows an example of loading the loan refusal data set (which you should delete at some point).
-
-```{r}
-library(tidyverse)
-print(getwd())
-data <- read_rds(here::here("dataset/loan_refusal_clean.rds"))
-```
-
-## Note on Attribution
-
-In general, you should try to provide links to relevant resources, especially those that helped you. You don't have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don't need a formal citation.
-
-If you are directly quoting from a source, please make that clear. You can show long quotes using `>` like this
-
-```         
-> To be or not to be.
-```
-
-> To be or not to be.
-
-------------------------------------------------------------------------
-
-## Rubric: On this page
-
-You will
-
--   Introduce what motivates your Data Analysis (DA)
-    -   Which variables and relationships are you most interested in?
-    -   What questions are you interested in answering?
-    -   Provide context for the rest of the page. This will include figures/tables that illustrate aspects of the data of your question.
--   Modeling and Inference
-    -   The page will include some kind of formal statistical model. This could be a linear regression, logistic regression, or another modeling framework.
-    -   Explain the ideas and techniques you used to choose the predictors for your model. (Think about including interaction terms and other transformations of your variables.)
-    -   Describe the results of your modelling and make sure to give a sense of the uncertainty in your estimates and conclusions.
--   Explain the flaws and limitations of your analysis
-    -   Are there some assumptions that you needed to make that might not hold? Is there other data that would help to answer your questions?
--   Clarity Figures
-    -   Are your figures/tables/results easy to read, informative, without problems like overplotting, hard-to-read labels, etc?
-    -   Each figure should provide a key insight. Too many figures or other data summaries can detract from this. (While not a hard limit, around 5 total figures is probably a good target.)
-    -   Default `lm` output and plots are typically not acceptable.
--   Clarity of Explanations
-    -   How well do you explain each figure/result?
-    -   Do you provide interpretations that suggest further analysis or explanations for observed phenomenon?
--   Organization and cleanliness.
-    -   Make sure to remove excessive warnings, hide all code, organize with sections or multiple pages, use bullets, etc.
-    -   This page should be self-contained, i.e. provide a description of the relevant data.
     
 Research Motivation and Questions
 
@@ -165,96 +104,6 @@ Our analysis highlights key patterns in wrongful conviction cases involving fals
 
 Although constrained by binary simplifications and data sparsity, our model offers a preliminary view of what systemic risk factors may underlie certain conviction outcomes. Future work should include richer data (e.g., qualitative case summaries or trial records) and build temporal models that consider changes over time. Integrating external datasets like city-level crime or policy shifts may also strengthen causal inferences.
 
-```{r}
-library(shiny)
-library(tidyverse)
-library(here)
-
-# Load filtered data
-exoneration_data <- read_rds(here("dataset", "exoneration_data_cook.rds"))
-crime_data <- read_rds(here("dataset-ignore", "crime_data_2010.rds"))
-
-```
-
-```{r, context="server"}
-
-ui <- fluidPage(
-  titlePanel("Cook County Crimes and Exonerations"),
-
-  sidebarLayout(
-    sidebarPanel(
-      conditionalPanel(
-        condition = "input.tabs == 'Crime Trend'",
-        selectInput("crime_type", "Choose a Crime Type:", 
-                    choices = unique(crime_data$`Primary Type`),
-                    selected = "THEFT")
-      ),
-      conditionalPanel(
-        condition = "input.tabs == 'Exoneration Rates'",
-        selectInput("exon_crime_type", "Choose Exonerated Crime Type:",
-                    choices = unique(exoneration_data$Worst_Crime_Display),
-                    selected = "Murder")
-      ),
-      sliderInput("year_range", "Select Year Range:",
-                  min = 2000, max = 2023, value = c(2010, 2023), sep = "")
-    ),
-
-    mainPanel(
-      tabsetPanel(id = "tabs",
-        tabPanel("Crime Trend", plotOutput("crimePlot")),
-        tabPanel("Exoneration Rates", plotOutput("exonPlot"))
-      )
-    )
-  )
-)
-
-```
-
-```{r, context="server"}
-server <- function(input, output) {
-
-  # Plot rendering logic
-  output$crimePlot <- renderPlot({
-    crime_data %>%
-      filter(`Primary Type` == input$crime_type,
-             Year >= input$year_range[1],
-             Year <= input$year_range[2]) %>%
-      ggplot(aes(x = Year)) +
-      geom_bar(fill = "steelblue") +
-      labs(title = paste("Number of", input$crime_type, "Cases by Year"),
-           x = "Year",
-           y = "Number of Cases")
-  })
 
 
- output$exonPlot <- renderPlot({
-  req(input$exon_crime_type)
-  selected_crime <- input$exon_crime_type
-
-  exoneration_data %>%
-    filter(
-      County == "Cook",
-      Race %in% c("Black", "White", "Hispanic", "Asian", "Other", "Don't Know"),
-      Worst_Crime_Display == selected_crime
-    ) %>%
-    group_by(Exonerated, Race) %>%
-    summarise(Exonerations = n(), .groups = "drop") %>%
-    filter(Exonerated >= input$year_range[1], Exonerated <= input$year_range[2]) %>%
-    ggplot(aes(x = Exonerated, y = Exonerations, color = Race)) +
-    geom_line(size = 1.2, na.rm = TRUE) +
-    labs(
-      title = paste("Exonerations Over Time –", selected_crime),
-      x = "Year of Exoneration",
-      y = "Number of Exonerations",
-      color = "Race"
-    ) +
-    theme_minimal()
-})
-}
-
-```
-
-```{r, context="server"}
-shinyApp(ui = ui, server = server)
-```
 
