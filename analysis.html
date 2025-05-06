@@ -116,8 +116,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#racial-disparities-in-exonerations" id="toc-racial-disparities-in-exonerations" class="nav-link active" data-scroll-target="#racial-disparities-in-exonerations">Racial Disparities in Exonerations</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -148,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg" class="img-fluid"></p>
 <p>Research Motivation and Questions</p>
-<p>Our project seeks to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?</p>
+<p>For our analysis page, a more nuanced approach was taken for exploring/analyzing data in support of the thesis. In the following page, there is an analysis of factors that go into exonerations, as this can give insight into why there are racial disparities and why certain patterns exist. This page will show how it is important to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?</p>
 <p>We are particularly interested in demographic variables (e.g., race, sex, age), case-related variables (e.g., type of crime, DNA involvement), and legal procedures (e.g., mistaken witness identification). We hypothesize that wrongful convictions involving false evidence may disproportionately affect specific racial groups or younger defendants and may correlate with the absence of forensic support (e.g., DNA). These hypotheses are explored both through descriptive plots and through logistic regression modeling.</p>
 <p>Data Sources and Collection</p>
 <ol type="1">
@@ -178,6 +184,18 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Insights: This histogram shows the distribution of exonerees’ ages at the time of their conviction. The majority were between 18 and 30 years old, suggesting that young adults are especially vulnerable to wrongful convictions. This pattern may stem from factors such as limited access to legal representation, increased susceptibility to coercion during interrogations, and targeted policing practices that disproportionately affect younger individuals. The distribution declines steadily with age, with very few exonerees convicted after age 50. These findings are consistent with existing research indicating that youth, particularly from marginalized backgrounds, are at heightened risk of being falsely accused or convicted.</p>
+<section id="racial-disparities-in-exonerations" class="level3">
+<h3 class="anchored" data-anchor-id="racial-disparities-in-exonerations">Racial Disparities in Exonerations</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: Black defendants dominate Cook County’s exoneration counts. That doesn’t mean they were treated fairly—it means they were more likely to be wrongfully convicted in the first place. They account for roughly 370 exonerations versus about 70 for Hispanics and only 30 for Whites. This stark imbalance demonstrates the second half of our thesis: Black defendants experience exoneration rates 1.5–2× those of White defendants—not because they are more innocent, but because they were more likely to be wrongfully convicted in the first place. The system isn’t correcting the error; it’s revealing how often it targeted the same group.</p>
 <p>Modeling and Inference</p>
 <p>We used logistic regression to examine predictors of false evidence:</p>
 <div class="cell">
@@ -320,6 +338,7 @@ Number of Fisher Scoring iterations: 15</code></pre>
 <p>Although constrained by binary simplifications and data sparsity, our model offers a preliminary view of what systemic risk factors may underlie certain conviction outcomes. Future work should include richer data (e.g., qualitative case summaries or trial records) and build temporal models that consider changes over time. Integrating external datasets like city-level crime or policy shifts may also strengthen causal inferences.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
