@@ -78,6 +78,15 @@ crime_data_2010 <- crime_data_raw %>%
 # Save the filtered dataset as RDS for faster access later
 write_rds(crime_data_2010, file = here::here("dataset-ignore", "crime_data_2010.rds"))
 
+# for interactive:
+crime_small <- crime_data_2010 %>%
+  filter(Year >= 2017) %>%
+  
+  # 3) Keep only the two columns your app actually uses:
+  select(Year, `Primary Type`)
+
+# 4) Write out the tiny RDS
+write_rds(crime_small, here("dataset", "crime_data_shiny.rds"))
 
 
 
