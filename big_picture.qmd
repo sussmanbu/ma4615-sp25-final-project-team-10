@@ -23,9 +23,9 @@ Think of this page as your 538/Upshot style article. This means that you should 
 Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.
 
 
+<a href="https://zuizzms.shinyapps.io/dataset/" target="_blank">Explore the interactive dashboard here.</a>
 
-
-```{r}
+```{r echo=FALSE}
 #| eval: false
 #| standalone: true
 #| viewerHeight: 640 # You will have to adjust this to fit everything
@@ -149,7 +149,7 @@ This page explores a troubling pattern in Cook County’s justice system: violen
 By comparing exoneration rates by crime type and race over time, we uncover how systemic bias can shape not just who is punished, but also who is eventually vindicated. These disparities don’t just reflect flaws in individual cases—they reveal larger patterns of racial injustice built into the system of arrest, prosecution, and review.
 
 Figure 1: Exonerations by Crime Type
-```{r}
+```{r echo=FALSE}
 # Load all needed packages right here
 library(tidyverse)   # brings in ggplot2, dplyr, %>%, etc.
 library(here)
@@ -172,7 +172,7 @@ exoneration_data %>%
 Interpretation: Murder and Drug Possession lead the exoneration count, suggesting the most serious charges are also the most error-prone. These aren’t minor slip-ups—they’re signs of deeper systemic failures. Murder convictions in particular often come from high-pressure investigations where mistakes, misconduct, or bias are more likely to occur.
 
 Figure 2:Age Distribution of Exonerees
-```{r}
+```{r echo=FALSE}
 ggplot(exoneration_data, aes(x = Age)) +
   geom_histogram(binwidth = 5, fill = "tomato", color = "white") +
   labs(title = "Age at Conviction of Exonerees",
@@ -182,7 +182,7 @@ ggplot(exoneration_data, aes(x = Age)) +
 Interpretation: Most exonerees were convicted between the ages of 18 and 30—young adults at the mercy of a complex legal system. Youth are more susceptible to false confessions, legal pressure, and poor representation. These aren’t just numbers—they reflect whose lives were most disrupted.
 
 Figure 3:Racial Disparities in Exonerations (Cook County Only)
-```{r}
+```{r echo=FALSE}
 # Load all needed packages right here
 library(tidyverse)   # brings in ggplot2, dplyr, %>%, etc.
 library(here)
