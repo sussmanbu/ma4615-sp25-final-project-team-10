@@ -1,0 +1,13 @@
+name: dataset
+title: dataset
+username: zuizzms
+account: zuizzms
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14684153
+bundleId: 10235792
+url: https://zuizzms.shinyapps.io/dataset/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: publicspreadsheet.csv|publicspreadsheet.xlsx
