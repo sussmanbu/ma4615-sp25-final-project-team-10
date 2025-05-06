@@ -11,7 +11,8 @@ draft: false
     
 Research Motivation and Questions
 
-Our project seeks to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?
+For our analysis page, a more nuanced approach was taken for exploring/analyzing data in support of the thesis. In the following page, there is an analysis of factors that go into exonerations, as this can give insight into why there are racial disparities and why certain patterns exist. 
+This page will show how it is important to understand the factors that predict whether false evidence—such as official misconduct, perjury/false accusation, or false confessions—is involved in a wrongful conviction case. These elements not only raise serious ethical and legal concerns but may also signal systemic failures in the criminal justice process. The core question we ask is: What characteristics of a case or an individual are associated with the presence of false evidence?
 
 We are particularly interested in demographic variables (e.g., race, sex, age), case-related variables (e.g., type of crime, DNA involvement), and legal procedures (e.g., mistaken witness identification). We hypothesize that wrongful convictions involving false evidence may disproportionately affect specific racial groups or younger defendants and may correlate with the absence of forensic support (e.g., DNA). These hypotheses are explored both through descriptive plots and through logistic regression modeling.
 
@@ -65,6 +66,30 @@ ggplot(exoneration_data, aes(x = Age)) +
        y = "Count")
 ```
 Insights: This histogram shows the distribution of exonerees’ ages at the time of their conviction. The majority were between 18 and 30 years old, suggesting that young adults are especially vulnerable to wrongful convictions. This pattern may stem from factors such as limited access to legal representation, increased susceptibility to coercion during interrogations, and targeted policing practices that disproportionately affect younger individuals. The distribution declines steadily with age, with very few exonerees convicted after age 50. These findings are consistent with existing research indicating that youth, particularly from marginalized backgrounds, are at heightened risk of being falsely accused or convicted.
+
+
+### Racial Disparities in Exonerations
+
+```{r echo=FALSE, warning=FALSE}
+# Load all needed packages right here
+library(tidyverse)   # brings in ggplot2, dplyr, %>%, etc.
+library(here)
+
+cook_data <- exoneration_data %>%
+  filter(County == "Cook")
+
+cook_data %>%
+  count(Race) %>%
+  ggplot(aes(x = reorder(Race, n), y = n)) +
+  geom_col(fill = "darkred") +
+  coord_flip() +
+  labs(title = "Exonerations by Race in Cook County",
+       x = "Race",
+       y = "Count")
+```
+Interpretation: Black defendants dominate Cook County’s exoneration counts. That doesn’t mean they were treated fairly—it means they were more likely to be wrongfully convicted in the first place. They account for roughly 370 exonerations versus about 70 for Hispanics and only 30 for Whites. This stark imbalance demonstrates the second half of our thesis: Black defendants experience exoneration rates 1.5–2× those of White defendants—not because they are more innocent, but because they were more likely to be wrongfully convicted in the first place. The system isn’t correcting the error; it’s revealing how often it targeted the same group. 
+
+
 
 
 Modeling and Inference
